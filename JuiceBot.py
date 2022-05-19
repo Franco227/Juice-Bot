@@ -12,8 +12,6 @@ permissions = 8
 invite_link = f"https://discord.com/oauth2/authorize?client_id={client_id}&scope=bot&permissions={permissions}"
 bot_version = "0.3"
 
-admins = [507753823742459904]
-
 def ping_color(latency):
     c = discord.Color
     colours = [16711680, c.red(), c.orange(), c.gold(), c.green(), 65280]
@@ -97,11 +95,11 @@ async def faq(inter):
 @bot.slash_command(description = "Update the FAQ of the current channel",
                     options = [discord.Option(name = "text", description = "The new FAQ", required = True)])
 async def update_faq(inter, text):
-    if inter.author.id not in admins:
-        await inter.send("You do not have the permission to do that !")
+    if bot.get_guild(936167959431364628).get_role(936168762078560266) not in inter.author.roles:
+        await inter.send("You do not have the permission to do that !", ephemeral = True)
         return
     if inter.channel_id not in channels():
-        await inter.send("This channel doesn't have an FAQ... Maybe you wanted to do /new_faq ?")
+        await inter.send("This channel doesn't have an FAQ... Maybe you wanted to do /new_faq ?", ephemeral = True)
         return
     with open("categories.json", 'r') as cts:
         cats = json.load(cts)
@@ -117,11 +115,11 @@ async def update_faq(inter, text):
                     discord.Option(name = "name", description = "The name of the category", required = True),
                     discord.Option(name = "text", description = "The new FAQ", required = True) ])
 async def new_faq(inter, name, text):
-    if inter.author.id not in admins:
-        await inter.send("You do not have the permission to do that !")
+    if bot.get_guild(936167959431364628).get_role(936168762078560266) not in inter.author.roles:
+        await inter.send("You do not have the permission to do that !", ephemeral = True)
         return
     if inter.channel_id in channels():
-        await inter.send("This channel already has an FAQ... Maybe you wanted to do /update_faq ?")
+        await inter.send("This channel already has an FAQ... Maybe you wanted to do /update_faq ?", ephemeral = True)
         return
     with open("categories.json", 'r') as cts:
         cats = json.load(cts)
@@ -131,7 +129,6 @@ async def new_faq(inter, name, text):
         json.dump(cats, cts, indent = 4)
         cts.truncate()
     await inter.send(f"The FAQ for the current channel has been set successfully!\n\nFAQ:```{text}```")
-
 
 
 bot.run(get_token())
