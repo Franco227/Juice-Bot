@@ -45,7 +45,7 @@ def get_cat(channel):
 def get_faq(channel):
     if channel not in channels():
         return "This channel doesn't have an FAQ..."
-    return get_cat(channel).get("faq")
+    return get_cat(channel).get("faq").replace("\\n", "\n")
 
 def get_cat_index(cat):
     return categories().index(cat)
@@ -108,8 +108,8 @@ async def update_faq(inter, text):
     with open("categories.json", 'w') as cts:
         json.dump(cats, cts, indent = 4)
         cts.truncate()
-    await inter.send(f"The FAQ for the current channel got updated successfully !\n\nOld FAQ:```{faq}```New FAQ:```{text}```")
-
+    await inter.author.send(f"The FAQ for the current channel got updated successfully !\n\nOld FAQ:```{faq}```New FAQ:```{text}```")
+    await inter.send(f"The FAQ for the current channel got updated successfully !")
 
 @bot.slash_command(description = "Create an FAQ for the current channel", options = [
                     discord.Option(name = "name", description = "The name of the category", required = True),
@@ -128,7 +128,8 @@ async def new_faq(inter, name, text):
     with open("categories.json", 'w') as cts:
         json.dump(cats, cts, indent = 4)
         cts.truncate()
-    await inter.send(f"The FAQ for the current channel has been set successfully!\n\nFAQ:```{text}```")
+    await inter.author.send(f"The FAQ for the current channel has been set successfully!\n\nFAQ:```{text}```")
+    await inter.send(f"The FAQ for the current channel has been set successfully!")
 
 
 bot.run(get_token())
