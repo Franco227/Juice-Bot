@@ -10,7 +10,7 @@ bot = commands.Bot(command_prefix = commands.when_mentioned_or(prefix), help_com
 client_id = "976753770916630528"
 permissions = 8
 invite_link = f"https://discord.com/oauth2/authorize?client_id={client_id}&scope=bot&permissions={permissions}"
-bot_version = "0.4"
+bot_version = "0.5"
 
 def ping_color(latency):
     c = discord.Color
@@ -46,6 +46,12 @@ def get_faq(channel):
     if channel not in channels():
         return "This channel doesn't have an FAQ..."
     return get_cat(channel).get("faq").replace("\\n", "\n")
+
+def get_faq_embed(channel):
+    if channel not in channels():
+        return discord.Embed(title = "Unknown Category", description = "This channel doesn't have an FAQ...", color = discord.Color.red())
+    cat = get_cat(channel)
+    return discord.Embed(title = cat.get("name"), description = cat.get("faq").replace("\\n", "\n"), color = discord.Color.green())
 
 def get_cat_index(cat):
     return categories().index(cat)
@@ -89,7 +95,7 @@ async def ping(inter):
 
 @bot.slash_command(description = "Display the FAQ for the current channel")
 async def faq(inter):
-    await inter.send(get_faq(inter.channel_id))
+    await inter.send(embed = get_faq_embed(inter.channel_id))
 
 
 @bot.slash_command(description = "Update the FAQ of the current channel",
