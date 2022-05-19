@@ -13,7 +13,7 @@
         {
             "name": "Perfect Seed",
             "channel": 936385744124141569,
-            "faq": "FAQ not available yet"
+            "faq": "**Perfect Seed Glitchless**\\n\\n**Q:** What is the objective of this category?\\n**A:** Using a hand-built seed, that given a large enough number of possible seeds, is *theoretically* possible to generate, beat the game as fast as possible.\\n\\n**Q:** Where do I download the map?\\n**A:** <https://github.com/BlockOfNetherite/PSG/releases/>\\n\\n**Q:** Timer no work, how fix?\\n**A:** It could be because the PSG map does not need to finish world generation, meaning the timer won't start. To fix this, use the start on old worlds option in the settings of SpeedrunIGT in newish versions\\n\\n**Q:** Is there a reset macro for this category?\\n**A:** Yes, there are multiple versions, which can be found in the <#936173705397145651> channel."
         },
         {
             "name": "Creative No Inventory",
