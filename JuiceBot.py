@@ -10,7 +10,7 @@ bot = commands.Bot(command_prefix = commands.when_mentioned_or(prefix), help_com
 client_id = "976753770916630528"
 permissions = 8
 invite_link = f"https://discord.com/oauth2/authorize?client_id={client_id}&scope=bot&permissions={permissions}"
-bot_version = "0.2"
+bot_version = "0.3"
 
 admins = [507753823742459904]
 
@@ -95,7 +95,7 @@ async def faq(inter):
 
 
 @bot.slash_command(description = "Update the FAQ of the current channel",
-                    options = [discord.Option(name = "text", description = "The new FAQ")])
+                    options = [discord.Option(name = "text", description = "The new FAQ", required = True)])
 async def update_faq(inter, text):
     if inter.author.id not in admins:
         await inter.send("You do not have the permission to do that !")
@@ -103,17 +103,19 @@ async def update_faq(inter, text):
     if inter.channel_id not in channels():
         await inter.send("This channel doesn't have an FAQ... Maybe you wanted to do /new_faq ?")
         return
-    with open("categories.json", 'w') as cts:
+    with open("categories.json", 'r') as cts:
         cats = json.load(cts)
         faq = get_cat(inter.channel_id).get("faq")
         cats.get("categories")[get_cat_index(get_cat(inter.channel_id))]["faq"] = text
-        json.dump(cats, cts, intent = 4)
+    with open("categories.json", 'w') as cts:
+        json.dump(cats, cts, indent = 4)
+        cts.truncate()
     await inter.send(f"The FAQ for the current channel got updated successfully !\n\nOld FAQ:```{faq}```New FAQ:```{text}```")
 
 
 @bot.slash_command(description = "Create an FAQ for the current channel", options = [
-                    discord.Option(name = "name", description = "The name of the category"),
-                    discord.Option(name = "text", description = "The new FAQ") ])
+                    discord.Option(name = "name", description = "The name of the category", required = True),
+                    discord.Option(name = "text", description = "The new FAQ", required = True) ])
 async def new_faq(inter, name, text):
     if inter.author.id not in admins:
         await inter.send("You do not have the permission to do that !")
@@ -121,11 +123,13 @@ async def new_faq(inter, name, text):
     if inter.channel_id in channels():
         await inter.send("This channel already has an FAQ... Maybe you wanted to do /update_faq ?")
         return
-    with open("categories.json", 'w') as cts:
+    with open("categories.json", 'r') as cts:
         cats = json.load(cts)
         new_cat = { "name": name, "channel": inter.channel_id, "faq": text }
         cats.get("categories").append(new_cat)
-        json.dump(cats, cts, intent = 4)
+    with open("categories.json", 'w') as cts:
+        json.dump(cats, cts, indent = 4)
+        cts.truncate()
     await inter.send(f"The FAQ for the current channel has been set successfully!\n\nFAQ:```{text}```")
 
 
