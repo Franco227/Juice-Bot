@@ -10,7 +10,7 @@ bot = commands.Bot(command_prefix = commands.when_mentioned_or(prefix), help_com
 client_id = "976753770916630528"
 permissions = 8
 invite_link = f"https://discord.com/oauth2/authorize?client_id={client_id}&scope=bot&permissions={permissions}"
-bot_version = "0.3"
+bot_version = "0.4"
 
 def ping_color(latency):
     c = discord.Color
@@ -131,5 +131,23 @@ async def new_faq(inter, name, text):
     await inter.author.send(f"The FAQ for the channel <#{inter.channel_id}> has been set successfully!\n\nFAQ:```{text}```")
     await inter.send("The FAQ for the current channel has been set successfully!")
 
+
+@bot.slash_command(description = "Delete the current channel's FAQ")
+async def delete_faq(inter):
+    if bot.get_guild(936167959431364628).get_role(936168762078560266) not in inter.author.roles:
+        await inter.send("You do not have the permission to do that !", ephemeral = True)
+        return
+    if inter.channel_id not in channels():
+        await inter.send("This channel doesn't have an FAQ...", ephemeral = True)
+        return
+    with open("categories.json", 'r') as cts:
+        cats = json.load(cts)
+        old_cat = get_cat(inter.channel_id)
+        cats.get("categories").remove(old_cat)
+    with open("categories.json", 'w') as cts:
+        json.dump(cats, cts, indent = 4)
+        cts.truncate()
+    await inter.author.send(f"The FAQ for the channel <#{inter.channel_id}> has been successfully deleted !\n\nOld FAQ:```{old_cat.get('faq')}```")
+    await inter.send("The FAQ for the current channel has been successfully deleted !")
 
 bot.run(get_token())
