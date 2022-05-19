@@ -1,6 +1,64 @@
 {
-    "fishtank": {
-        "channel": 936173275371950090,
-        "faq": "Idk what to put here"
-    }
+    "categories": [
+        {
+            "name": "Fishtank",
+            "channel": 936173275371950090,
+            "faq": "FAQ not available yet"
+        },
+        {
+            "name": "Datapack SSG",
+            "channel": 936636479222976532,
+            "faq": "FAQ not available yet"
+        },
+        {
+            "name": "Perfect Seed",
+            "channel": 936385744124141569,
+            "faq": "FAQ not available yet"
+        },
+        {
+            "name": "Creative No Inventory",
+            "channel": 936386037264039987,
+            "faq": "FAQ not available yet"
+        },
+        {
+            "name": "Break Beenest",
+            "channel": 936174026496290856,
+            "faq": "FAQ not available yet"
+        },
+        {
+            "name": "All Arthropods",
+            "channel": 936285944330465332,
+            "faq": "FAQ not available yet"
+        },
+        {
+            "name": "All Buckets",
+            "channel": 936385782145490944,
+            "faq": "FAQ not available yet"
+        },
+        {
+            "name": "All Deaths",
+            "channel": 936386963521536041,
+            "faq": "FAQ not available yet"
+        },
+        {
+            "name": "Half Death",
+            "channel": 936959169209184276,
+            "faq": "FAQ not available yet"
+        },
+        {
+            "name": "Low%",
+            "channel": 936386983666794546,
+            "faq": "FAQ not available yet"
+        },
+        {
+            "name": "Saddle Master",
+            "channel": 936460254210846751,
+            "faq": "FAQ not available yet"
+        },
+        {
+            "name": "Herobrine",
+            "channel": 964874386991628339,
+            "faq": "FAQ not available yet"
+        }
+    ]
 }
