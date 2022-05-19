@@ -16,8 +16,8 @@ admins = [507753823742459904]
 
 def ping_color(latency):
     c = discord.Color
-    colours = [red, c.red(), c.orange(), c.gold(), c.green(), green]
-    values = [5000, 500, 350, 200, 100]
+    colours = [16711680, c.red(), c.orange(), c.gold(), c.green(), 65280]
+    values = [5000, 750, 500, 250, 100]
     for i, nbr in enumerate(values):
         if latency >= nbr: return colours[i]
     return green
@@ -84,7 +84,8 @@ async def ping(inter):
     await inter.send(":ping_pong: **Pong !**")
     botLatency = round(1000 * (time.monotonic() - timePing), 2)
     if botLatency >= 1000: seconds = f" (`{round(botLatency / 1000)}s`)"
-    embed = discord.Embed(title = ":ping_pong: **Pong !**", description = f"**:robot: Bot Latency :** `{botLatency}ms`{seconds}", color = ping_colour(botLatency))
+    else: seconds = ""
+    embed = discord.Embed(title = ":ping_pong: **Pong !**", description = f"**:robot: Bot Latency :** `{botLatency}ms`{seconds}", color = ping_color(botLatency))
     await inter.edit_original_message(content = "", embed = embed)
 
 
