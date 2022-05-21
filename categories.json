@@ -3,12 +3,12 @@
         {
             "name": "Fishtank",
             "channel": 936173275371950090,
-            "faq": "FAQ not available yet"
+            "faq": "**Q:** What is this category ?\\n **A:** You have to make a fishtank, check rules here : <https://discord.com/channels/936167959431364628/936173275371950090/936984778048143360>\\n \\n **Q:** What are the current SSG seeds ?\\n **A:** All ssg seeds are listed here : <https://discord.com/channels/936167959431364628/936173275371950090/943560507699376179>\\n \\n **Q:** How do I build the fishtank for the silk mansion seed ?\\n **A:** Here is one of the fastest setup : <https://www.youtube.com/watch?v=nEIE3jnimCY>\\n \\n **Q:** Practice map ?\\n **A:** Practice map for fishtank build for silk mansion seed : <https://www.mediafire.com/file/jamvlkmmh0ar614/FishTank_Practice.zip/file>"
         },
         {
             "name": "Datapack SSG",
             "channel": 936636479222976532,
-            "faq": "FAQ not available yet"
+            "faq": "**Q:** What is this category ?\\n **A:** This category is Datapack Set Seed Glitchless. You have to beat the game **on the gravel SSG seed** using the mod Tyche.\\n \\n **Q:** What is Tyche and where do I find it ?\\n **A:** Tyche is a mod that remove RNG : flint drop, mobs, spawn, dragon perch... You can find it here : <https://github.com/VoidXWalker/tyche/releases/latest>\\n \\n **Q:** What is the gravel SSG seed ?\\n **A:** The gravel seed is `-3294725893620991126`, only works in 1.17 !"
         },
         {
             "name": "Perfect Seed",
@@ -18,12 +18,12 @@
         {
             "name": "Creative No Inventory",
             "channel": 936386037264039987,
-            "faq": "FAQ not available yet"
+            "faq": "**Q:** What is this category ?\\n **A:** This is Creative No Inventory, you have to beat the game in creative, without using the creative inventory.\\n \\n **Q:** Can I use commands ?\\n **A:** Using commands or switching gamemode is forbidden, and we recommand disabling cheats when creating the world.\\n \\n **Q:** How do I pickup a block or duplicate an item ?\\n **A:** Use middle click to pickup a block, or to get a stack of the item you middle clicked.\\n \\n **Q:** I can't craft in creative, how can I make eyes of ender or other stuff ?\\n **A:** You have to find a naturally generated crafting table. All structures generated with one are listed here : <https://discord.com/channels/936167959431364628/936386037264039987/959664336396226581>\\n \\n **Q:** Do I have to beat the ender dragon ?\\n **A:** No, you only need to enter the credits. To do this, you can pickup the end portal frames, and rebuild the portal when entering the end."
         },
         {
             "name": "Break Beenest",
             "channel": 936174026496290856,
-            "faq": "FAQ not available yet"
+            "faq": "**Q:** What is this category ?\\n **A:** Read the title.\\n \\n **Q:** I got a time of under 450ms, why did my run got retimed to 450ms ?\\n **A:** The time it takes to break a beenest is 450ms, even if your timer says otherwise. The only way to do it in less than 450ms is to loot a gold axe in a ruined portal chest then break the beenest.\\n \\n **Q:** I'm doing SSG but I don't spawn in front of the beenest...\\n **A:** When loading a world, you spawn in a random place in a specific radius, so you won't always get the best spawn. You can use World Preview to render the world during the world loading and reset faster if you don't have the correct spawn : <https://github.com/VoidXWalker/WorldPreview/releases/latest>\\n"
         },
         {
             "name": "All Arthropods",
@@ -46,11 +46,6 @@
             "faq": "FAQ not available yet"
         },
         {
-            "name": "Low%",
-            "channel": 936386983666794546,
-            "faq": "FAQ not available yet"
-        },
-        {
             "name": "Saddle Master",
             "channel": 936460254210846751,
             "faq": "FAQ not available yet"
@@ -59,6 +54,11 @@
             "name": "Herobrine",
             "channel": 964874386991628339,
             "faq": "FAQ not available yet"
+        },
+        {
+            "name": "Low%",
+            "channel": 936386983666794546,
+            "faq": "**Q:** What is  this category?\\n **A:** Beat the game while collecting the fewest possible advancements along the way.\\n\\n  **Q:** What is a root and what does the split between with and without roots mean?\\n **A:** Roots are the base advancements of each tree (Minecraft, Adventure, Husbandry, Nether, End). As such they are triggered by very basic action in the game, making them difficult to avoid. As such, there is a category split, that does not count roots. Although the names may be a bit confusing, \"Without Roots\" means roots do not count, and you are allowed to get them. The opposite goes for the \"With Roots\" split.\\n\\n  **Q:** What advancements are needed to complete the game?\\n **A:** In RSG, only the We Need To Go Deeper, the root of the nether tree, The End?, and the root of the end tree are needed. In SSG, the nether advancements aren't necessary, reducing the number to 2, and when roots aren't counted, only 2 are necessary.\\n\\n  **Q:** What is the extra split 3-5 or 5-7?\\n **A:** These are to add extra strategy to the routing, make the category more accessible for runners who don't want to learn all of the skips, or to allow runners to submit runs that they choked by accidentally getting an advancement.\\n\\n  **Q:** How do I avoid getting X advancement?\\n **A:** For item based advancements, use what is known as the GUI skip, where when in a GUI other than you inventory, the inventory update trigger will not trigger until you close that container.\\n For structure based advancements, there is a mixture of dodging the structure's hitbox or abusing the fact that the location advancement trigger on checks your location every 1s.\\n **There is plenty of other information, including setups and more specific advancement skips on the routing doc, which can be found here: https://docs.google.com/document/d/17HUK2nWZTHMi-WZEQZDKFkCbxnJ231B_ObKctj-Yvms/edit**"
         }
     ]
 }
