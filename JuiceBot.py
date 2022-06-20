@@ -10,7 +10,7 @@ bot = commands.Bot(command_prefix = commands.when_mentioned_or(prefix), help_com
 client_id = "976753770916630528"
 permissions = 8
 invite_link = f"https://discord.com/oauth2/authorize?client_id={client_id}&scope=bot&permissions={permissions}"
-bot_version = "0.5"
+bot_version = "0.6"
 
 def ping_color(latency):
     c = discord.Color
@@ -117,6 +117,7 @@ async def update_faq(inter, text):
     await inter.author.send(f"The FAQ for the channel <#{inter.channel_id}> got updated successfully !\n\nOld FAQ:```{faq}```New FAQ:```{text}```")
     await inter.send("The FAQ for the current channel got updated successfully !")
 
+
 @bot.slash_command(description = "Create an FAQ for the current channel", options = [
                     discord.Option(name = "name", description = "The name of the category", required = True),
                     discord.Option(name = "text", description = "The new FAQ", required = True) ])
@@ -155,5 +156,33 @@ async def delete_faq(inter):
         cts.truncate()
     await inter.author.send(f"The FAQ for the channel <#{inter.channel_id}> has been successfully deleted !\n\nOld FAQ:```{old_cat.get('faq')}```")
     await inter.send("The FAQ for the current channel has been successfully deleted !")
+
+
+@bot.slash_command(description = "Add reactions under a poll", options = [
+                    discord.Option(name = "channel_id", description = "The ID of the channel of the poll", required = True),
+                    discord.Option(name = "message_id", description = "The ID of the message of the poll", required = True),
+                    discord.Option(name = "number_of_reactions", description = "Number of reaction, leave empty for a yes/no poll", required = False,
+                                    type = discord.OptionType.integer, min_value = 2, max_value = 10) ])
+async def poll(inter, channel_id, message_id, number_of_reactions = 0):
+    reactions = ["1️⃣", "2️⃣", "3️⃣", "4️⃣", "5️⃣", "6️⃣", "7️⃣", "8️⃣", "9️⃣", "🔟"]
+    if bot.get_guild(936167959431364628).get_role(936168762078560266) not in inter.author.roles:
+        await inter.send("You do not have the permission to do that !", ephemeral = True)
+        return
+    channel = bot.get_channel(int(channel_id))
+    if (channel is None):
+        await inter.send("The channel_id is invalid !", ephemeral = True)
+        return
+    try: message = await channel.fetch_message(int(message_id))
+    except discord.NotFound:
+        await inter.send("The message_id is invalid !", ephemeral = True)
+        return
+    await inter.send("Adding reactions...")
+    if (number_of_reactions == 0):
+        await message.add_reaction("🟢")
+        await message.add_reaction("🔴")
+    else:
+        for i in range(number_of_reactions): await message.add_reaction(reactions[i])
+    await inter.edit_original_message(content = "All reactions were added !")
+
 
 bot.run(get_token())
