@@ -18,7 +18,7 @@
         {
             "name": "Creative No Inventory",
             "channel": 936386037264039987,
-            "faq": "**Q:** What is this category ?\\n **A:** This is Creative No Inventory, you have to beat the game in creative, without using the creative inventory.\\n \\n **Q:** Can I use commands ?\\n **A:** Using commands or switching gamemode is forbidden, and we recommand disabling cheats when creating the world.\\n \\n **Q:** How do I pickup a block or duplicate an item ?\\n **A:** Use middle click to pickup a block, or to get a stack of the item you middle clicked.\\n \\n **Q:** I can't craft in creative, how can I make eyes of ender or other stuff ?\\n **A:** You have to find a naturally generated crafting table. All structures generated with one are listed here : <https://discord.com/channels/936167959431364628/936386037264039987/959664336396226581>\\n \\n **Q:** Do I have to beat the ender dragon ?\\n **A:** No, you only need to enter the credits. To do this, you can pickup the end portal frames, and rebuild the portal when entering the end."
+            "faq": "**Q:** What is this category ?\\n **A:** This is Creative No Inventory, you have to beat the game in creative, without using the creative inventory.\\n \\n **Q:** Can I use commands ?\\n **A:** Using commands or switching gamemode is forbidden, and we recommand disabling cheats when creating the world.\\n \\n **Q:** How do I pickup a block or duplicate an item ?\\n **A:** Use middle click to pickup a block, or get a stack of the item you middle clicked.\\n \\n **Q:** I can't craft in creative, how can I make eyes of ender or other stuff ?\\n **A:** You have to find a naturally generated crafting table. All structures generated with one are listed here : <https://discord.com/channels/936167959431364628/936386037264039987/959664336396226581>\\n \\n **Q:** How do I kill blazes or endermen ?\\n **A:** The main strat is to use beds, since they blow up in the nether. You do not have to kill him with your bare fists. Reminder : You have to punch the blaze before blowing him up, or else he will never drop.\\n \\n**Q:** Do I have to beat the ender dragon ?\\n **A:** No, you only need to enter the credits. To do this, you can pickup the end portal frames, and rebuild the portal when entering the end."
         },
         {
             "name": "Break Beenest",
@@ -28,7 +28,7 @@
         {
             "name": "All Arthropods",
             "channel": 936285944330465332,
-            "faq": "FAQ not available yet"
+            "faq": "**Q:** What is this category ?\\n**A:** All Arthropods. You have to kill each arthropod at least once.\\n\\n**Q:** What are the arthropods in Minecraft ?\\n**A:** Spider, Cave Spider, Silverfish, Endermite (1.8+), Bee (1.15+).\\n\\n**Q:** If an arthropod dies without me doing anything, does that count as a kill ?\\n**A:** No. For it to count as a kill, the arthropod must die as a result of a player's actions.\\n\\n**Q:** I killed an arthropod, but I was running away as it finished dying. How do I prove I killed it ?\\n**A:** The statistics menu, progress towards the Monsters Hunted advancement, visually seeing the death animation, and subtitles all count as a way to confirm the kill.\\n\\n**Q:** Is there a custom SpeedrunIGT Extension for All Arthropods ?\\n**A:** Yes! Download it here : <https://github.com/RedLime/AllArthropodsExtension/releases/tag/1.0>."
         },
         {
             "name": "All Buckets",
