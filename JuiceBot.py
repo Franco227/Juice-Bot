@@ -10,7 +10,7 @@ bot = commands.Bot(command_prefix = commands.when_mentioned_or(prefix), help_com
 client_id = "976753770916630528"
 permissions = 8
 invite_link = f"https://discord.com/oauth2/authorize?client_id={client_id}&scope=bot&permissions={permissions}"
-bot_version = "0.7"
+bot_version = "0.8"
 
 def ping_color(latency):
     c = discord.Color
@@ -86,6 +86,10 @@ async def on_message(message):
 async def version(inter):
     await inter.send(f"Version {bot_version}")
 
+
+@bot.slash_command(description = "Do it first")
+async def dif(inter):
+    await inter.send("Dear runner,\n\nDo it first.\n\n- The Mods")
 
 @bot.slash_command(description = "Display bot latency")
 async def ping(inter):
