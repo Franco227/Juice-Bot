@@ -10,7 +10,7 @@ bot = commands.Bot(command_prefix = commands.when_mentioned_or(prefix), help_com
 client_id = "976753770916630528"
 permissions = 8
 invite_link = f"https://discord.com/oauth2/authorize?client_id={client_id}&scope=bot&permissions={permissions}"
-bot_version = "0.6"
+bot_version = "0.7"
 
 def ping_color(latency):
     c = discord.Color
@@ -70,6 +70,11 @@ async def on_ready():
     except: pass
     await bot.change_presence(activity = discord.Game(name = "MC JUIGE"))
 
+
+@bot.event
+async def on_message(message):
+    if message.author.bot: return
+    if message.guild.id != 936167959431364628: return
 
 
 ######################
