@@ -2,6 +2,7 @@ import asyncio, time, json
 import disnake as discord
 from disnake.ext import commands
 from datetime import datetime
+from random import randrange
 
 prefix = '/'
 intents = discord.Intents.all()
@@ -10,7 +11,7 @@ bot = commands.Bot(command_prefix = commands.when_mentioned_or(prefix), help_com
 client_id = "976753770916630528"
 permissions = 8
 invite_link = f"https://discord.com/oauth2/authorize?client_id={client_id}&scope=bot&permissions={permissions}"
-bot_version = "0.8"
+bot_version = "0.9"
 
 def ping_color(latency):
     c = discord.Color
@@ -23,6 +24,11 @@ def ping_color(latency):
 def get_token():
     with open("TOKEN", 'r') as f:
         return f.read()
+
+def get_random_status():
+    with open("splash_texts.txt", 'r') as f:
+        texts = f.readlines()
+        return texts[randrange(len(texts))]
 
 
 ######################
@@ -68,13 +74,15 @@ async def on_ready():
     connected = discord.Embed(title = f"Bot connected {time} !", colour = discord.Colour.green())
     try: await bot.get_guild(log_guild).get_channel(log_channel).send(embed = connected)
     except: pass
-    await bot.change_presence(activity = discord.Game(name = "MC JUIGE"))
+    await bot.change_presence(activity = discord.Game(name = get_random_status()))
 
 
 @bot.event
 async def on_message(message):
     if message.author.bot: return
     if message.guild.id != 936167959431364628: return
+    msg = message.content.split(' ')
+    if "virst" in msg or "virt" in msg: await message.reply("crimson*")
 
 
 ######################
@@ -86,6 +94,13 @@ async def on_message(message):
 async def version(inter):
     await inter.send(f"Version {bot_version}")
 
+@bot.slash_command(description = "Change the bot's status")
+async def change_status(inter):
+    if bot.get_guild(936167959431364628).get_role(936168762078560266) not in inter.author.roles:
+        await inter.send("You do not have the permission to do that !", ephemeral = True)
+        return
+    await bot.change_presence(activity = discord.Game(name = get_random_status()))
+    await inter.send("Done !", ephemeral = True)
 
 @bot.slash_command(description = "Do it first")
 async def dif(inter):
