@@ -23,7 +23,7 @@
         {
             "name": "Break Beenest",
             "channel": 936174026496290856,
-            "faq": "**Q:** What is this category ?\\n **A:** Read the title.\\n \\n **Q:** I got a time of under 450ms, why did my run got retimed to 450ms ?\\n **A:** The time it takes to break a beenest is 450ms, even if your timer says otherwise. The only way to do it in less than 450ms is to loot a gold axe in a ruined portal chest then break the beenest.\\n \\n **Q:** I'm doing SSG but I don't spawn in front of the beenest...\\n **A:** When loading a world, you spawn in a random place in a specific radius, so you won't always get the best spawn. You can use World Preview to render the world during the world loading and reset faster if you don't have the correct spawn : <https://github.com/VoidXWalker/WorldPreview/releases/latest>\\n"
+            "faq": "**Q:** What is this category ?\\n **A:** Read the title.\\n \\n **Q:** I got a time of under 450ms, why did my run got retimed to 450ms ?\\n **A:** The time it takes to break a beenest is 450ms, even if your timer says otherwise. The only way to do it in less than 450ms is to loot a gold axe in a ruined portal chest then break the beenest.\\n \\n **Q:** I'm doing SSG but I don't spawn in front of the beenest...\\n **A:** When loading a world, you spawn in a random place in a specific radius, so you won't always get the best spawn. You can use [World Preview](https://github.com/VoidXWalker/WorldPreview/releases/latest) to render the world during the world loading and reset faster if you don't have the correct spawn."
         },
         {
             "name": "All Arthropods",
@@ -53,12 +53,37 @@
         {
             "name": "Herobrine",
             "channel": 964874386991628339,
-            "faq": "FAQ not available yet"
+            "faq": "**Q:** What is this category ?\\n**A:** Rules are detailed [here](https://discord.com/channels/936167959431364628/964874386991628339/964893360726867988)!\\n\\n"
         },
         {
             "name": "Low%",
             "channel": 936386983666794546,
             "faq": "**Q:** What is  this category?\\n **A:** Beat the game while collecting the fewest possible advancements along the way.\\n\\n  **Q:** What is a root and what does the split between with and without roots mean?\\n **A:** Roots are the base advancements of each tree (Minecraft, Adventure, Husbandry, Nether, End). As such they are triggered by very basic action in the game, making them difficult to avoid. As such, there is a category split, that does not count roots. Although the names may be a bit confusing, \"Without Roots\" means roots do not count, and you are allowed to get them. The opposite goes for the \"With Roots\" split.\\n\\n  **Q:** What advancements are needed to complete the game?\\n **A:** In RSG, only the We Need To Go Deeper, the root of the nether tree, The End?, and the root of the end tree are needed. In SSG, the nether advancements aren't necessary, reducing the number to 2, and when roots aren't counted, only 2 are necessary.\\n\\n  **Q:** What is the extra split 3-5 or 5-7?\\n **A:** These are to add extra strategy to the routing, make the category more accessible for runners who don't want to learn all of the skips, or to allow runners to submit runs that they choked by accidentally getting an advancement.\\n\\n  **Q:** How do I avoid getting X advancement?\\n **A:** For item based advancements, use what is known as the GUI skip, where when in a GUI other than you inventory, the inventory update trigger will not trigger until you close that container.\\n For structure based advancements, there is a mixture of dodging the structure's hitbox or abusing the fact that the location advancement trigger on checks your location every 1s.\\n **There is plenty of other information, including setups and more specific advancement skips on the routing doc, which can be found here: https://docs.google.com/document/d/17HUK2nWZTHMi-WZEQZDKFkCbxnJ231B_ObKctj-Yvms/edit**"
+        },
+        {
+            "name": "Zombie Doctor",
+            "channel": 988343391337185360,
+            "faq": "**Q:** What is this category ?\\n**A:** You need to obtain the Zombie Doctor advancement, which is obtained by curing a Zombie Villager.\\n\\n**Q:** How do I cure a Zombie Villager ?\\n**A:** You need to apply the effect Weakness to it first (by using a throwable potion or a tipped arrow), then feed it a (non-enchanted) golden apple.\\n\\n**Q:** How long does it take to cure ?\\n**A:** Basic time is a random time between 3 and 5 minutes. However, you can slightly speed it up by placing **irons bars** and/or **beds** in a 9x9x9 cube centered on the Zombie Villager. [More informations here!](https://discord.com/channels/936167959431364628/988343391337185360/988501235931955210)"
+        },
+        {
+            "name": "Postmortal",
+            "channel": 988343447469563904,
+            "faq": "**Q:** What is this category ?\\n**A:** You need to obtain the \"Postmortal\" advancement, which is obtained by taking fatal damage while holding a Totem of Undying.\\n\\n**Q:** How do I obtain a totem ?\\n**A:** You get a totem by killing an Evoker. Evokers spawns in Mansion, and at certain waves of a village raid.\\n\\n**Q:** What is the SSG seed ?\\n**A:** `4463711588556628022` on version 1.16.1"
+        },
+        {
+            "name": "Superflat Any%",
+            "channel": 992760843303395378,
+            "faq": "**Q:** What do I need to do ?\\n**A:** Beat the game in a superflat world.\\n\\n**Q:** How do I reset fast ?\\n**A:** Atum 1.1.0 and above allows you to reset superflat words.\\n\\n**Q:** How do I play this ?\\n**A:** Here is [Sweep's Superflat Speedrunning Guide](https://docs.google.com/document/d/1O_1eQ0gPwYehcsooXi9M_POrpXmKjZUdCW7HpQE5M7M) !\\n\\n**Q:** Where strongholds ?\\n**A:** [Here!](https://cdn.discordapp.com/attachments/992760843303395378/992771914613395496/unknown.png)\\n\\n**Q:** Is LazyStronghold allowed ?\\n**A:** **No**, LazyStronghold makes the stronghold generate as in a normal world, instead of the fixed coordinates."
+        },
+        {
+            "name": "Quater",
+            "channel": 999415831484178452,
+            "faq": "Get 1/4 of the advancements, rounded up."
+        },
+        {
+            "name": "Mojang Banner",
+            "channel": 1006201452957540372,
+            "faq": "**Q:** What is this category ?\\n**A:** This is Mojang Banner%, you need to obtain a [Mojang Banner](https://cdn.discordapp.com/attachments/547121208425185280/1004355004687200407/unknown.png).\\n\\n**Q:** How do I do that ?\\n**A:** You need to make a red banner, then use it in a loom with the \"Thing\" Banner Pattern and a white dye.\\n\\n**Q:** And how do I get the \"Thing\" Banner Pattern ?\\n**A:** You need to get an Enchanted Golden Apple and craft it with a paper."
         }
     ]
 }
