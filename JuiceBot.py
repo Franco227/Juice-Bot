@@ -12,7 +12,7 @@ bot = commands.Bot(command_prefix = commands.when_mentioned_or(prefix), help_com
 client_id = "976753770916630528"
 permissions = 8
 invite_link = f"https://discord.com/oauth2/authorize?client_id={client_id}&scope=bot&permissions={permissions}"
-bot_version = "0.10"
+bot_version = "0.11"
 
 def dtime():
     return datetime.utcnow()
@@ -186,31 +186,37 @@ async def delete_faq(inter):
     await inter.send("The FAQ for the current channel has been successfully deleted !")
 
 
-@bot.slash_command(description = "Check the probability of obtaining something from something else", options = [
-                    discord.Option(name = "item", description = "Item to check", required = True, choices = [
-                        discord.OptionChoice(name = "gravel", value = "gravel")
+
+@bot.slash_command(description = "Check the probability of something idk", options = [
+                    discord.Option(name = "of", description = "What to check", required = True, choices = [
+                        discord.OptionChoice(name = "flint", value = "flint"),
+                        discord.OptionChoice(name = "ender_eye_breaks", value = "ender_eye_breaks")
                     ]),
-                    discord.Option(name = "nb_item", description = "The number of the item you want to get", required = True,
+                    discord.Option(name = "nb", description = "The number expected", required = True,
                                     type = discord.OptionType.integer, min_value = 1),
-                    discord.Option(name = "nb_trials", description = "The number of trials (gravel mined)", required = True,
+                    discord.Option(name = "nb_trials", description = "The number of attempts", required = True,
                                     type = discord.OptionType.integer, min_value = 1) ])
-async def odds(inter, item, nb_item, nb_trials):
-    if item == "gravel": o_item, p = "flint", 0.1
+async def odds(inter, of, nb, nb_trials):
+    if of == "flint":
+        msg = f"Probability of obtaining :Q: {nb} flint(s) from {nb_trials} gravel(s) mined"
+        p = 0.1
+    if of == "ender_eye_breaks":
+        msg = f"Probability of :Q: {nb} eye break(s) for {nb_trials} eye throw(s)"
+        p = 0.2
     else:
         await inter.send("Error: Item not found", ephemeral = True)
         return
-    p_e = round(binom.pmf(nb_item, nb_trials, p) * 100, 6)
-    p_cie = round(binom.cdf(nb_item, nb_trials, p) * 100, 6)
+    p_e = round(binom.pmf(nb, nb_trials, p) * 100, 6)
+    p_cie = round(binom.cdf(nb, nb_trials, p) * 100, 6)
     p_cse = round(100 - p_cie + p_e, 6)
     p_ci = round(p_cie - p_e, 6)
     p_cs = round(100 - p_cie, 6)
-    embed = discord.Embed(title = f"Odds for {item}", timestamp = dtime())
-    f_string = f"{nb_item} {o_item + 's' * (nb_item > 1)} from {nb_trials} {item}"
-    embed.add_field(name = f"Probability of obtaining exactly {f_string}", value = f"`P(X = {nb_item})` = `{p_e}%`", inline = False)
-    embed.add_field(name = f"Probability of obtaining more than {f_string}", value = f"`P(X > {nb_item})` = `{p_cs}%`", inline = False)
-    embed.add_field(name = f"Probability of obtaining less than {f_string}", value = f"`P(X < {nb_item})` = `{p_ci}%`", inline = False)
-    embed.add_field(name = f"Probability of obtaining more or equal to {f_string}", value = f"`P(X >= {nb_item})` = `{p_cse}%`", inline = False)
-    embed.add_field(name = f"Probability of obtaining less or equal to {f_string}", value = f"`P(X >= {nb_item})` = `{p_cie}%`", inline = False)
+    embed = discord.Embed(title = f"Odds for {of}", timestamp = dtime())
+    embed.add_field(name = msg.replace(":Q:", "exactly"), value = f"`P(X = {nb})` = `{p_e}%`", inline = False)
+    embed.add_field(name = msg.replace(":Q:", "more than"), value = f"`P(X > {nb})` = `{p_cs}%`", inline = False)
+    embed.add_field(name = msg.replace(":Q:", "less than"), value = f"`P(X < {nb})` = `{p_ci}%`", inline = False)
+    embed.add_field(name = msg.replace(":Q:", "more or equal to"), value = f"`P(X >= {nb})` = `{p_cse}%`", inline = False)
+    embed.add_field(name = msg.replace(":Q:", "less or equal to"), value = f"`P(X <= {nb})` = `{p_cie}%`", inline = False)
     await inter.send(embed = embed)
 
 
