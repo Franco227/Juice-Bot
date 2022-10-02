@@ -12,7 +12,7 @@ bot = commands.Bot(command_prefix = commands.when_mentioned_or(prefix), help_com
 client_id = "976753770916630528"
 permissions = 8
 invite_link = f"https://discord.com/oauth2/authorize?client_id={client_id}&scope=bot&permissions={permissions}"
-bot_version = "0.12"
+bot_version = "0.13"
 
 
 
@@ -153,6 +153,16 @@ async def ping(inter):
     embed = discord.Embed(title = ":ping_pong: **Pong !**", description = f"**:robot: Bot Latency :** `{latency}ms`{seconds}", color = ping_color(latency))
     await inter.edit_original_message(content = "", embed = embed)
 
+
+@bot.slash_command(description = "Display the requirements for a new category to be added")
+async def requirements(inter):
+    embed = discord.Embed(title = "Requirements for a category to be added", description = "", timestamp = dtime())
+    embed.add_field(name = "1 - Suggest the category", value = "Send the category in <#991278937101582486> with the category's name and goal", inline = False)
+    embed.add_field(name = "2 - Get upvotes and runs", value = "Get at least one of the following:\n> - 30 upvotes and 1 RSG run\n> - 25 upvotes and 3 RSG runs\*\n> - 20 upvotes and 5 RSG runs\*\n\n\* : Each RSG run must be performed by a different runner", inline = False)
+    embed.add_field(name = "3 - Fill the form", value = "Fill [this form](https://forms.gle/UYyHiC2LdbGWw3S2A)", inline = False)
+    embed.add_field(name = "4 - Wait for a public poll", value = "Mods will debate to see if the category is worth adding, and will then either make a poll or tell you no", inline = False)
+    embed.add_field(name = "5 - Get enough votes", value = "If the category gets enough votes, it gets added", inline = False)
+    await inter.send(embed = embed)
 
 
 @bot.slash_command(description = "Display the FAQ for the current channel")
