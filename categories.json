@@ -23,7 +23,7 @@
         {
             "name": "Break Beenest",
             "channel": 936174026496290856,
-            "faq": "**Q:** What is this category ?\\n **A:** Read the title.\\n \\n **Q:** I got a time of under 450ms, why did my run got retimed to 450ms ?\\n **A:** The time it takes to break a beenest is 450ms, even if your timer says otherwise. The only way to do it in less than 450ms is to loot a gold axe in a ruined portal chest then break the beenest.\\n \\n **Q:** I'm doing SSG but I don't spawn in front of the beenest...\\n **A:** When loading a world, you spawn in a random place in a specific radius, so you won't always get the best spawn. You can use [World Preview](https://github.com/VoidXWalker/WorldPreview/releases/latest) to render the world during the world loading and reset faster if you don't have the correct spawn."
+            "faq": "**Q:** What is this category ?\\n **A:** Read the title.\\n \\n **Q:** I got a time of under 450ms, why did my run got retimed to 450ms ?\\n **A:** The time it takes to break a beenest is 450ms, even if your timer says otherwise. The only way to do it in less than 450ms is to loot a gold axe in a ruined portal chest then break the beenest.\\n \\n **Q:** Is there an SSG seed with a gold axe in a ruined portal ?\\n**A:** Yes! `1108912127130472088` (1.16.1), seed found by DylanDC14.\\n\\n**Q:** SpeedrunIGT Extension ?\\n**A:** [JSON Extension](https://discord.com/channels/936167959431364628/936174026496290856/1017356525133643776) (Put it in /speedrunigt/categories/), [Mod Extension](https://github.com/RedLime/BreakBeeNestExtension/releases/latest) (Put it in mods folder). You then just have to select \"Break Beenest\" in speedrunigt category (or \"Break Bee Nest\" for the mod extension)"
         },
         {
             "name": "All Arthropods",
@@ -73,7 +73,7 @@
         {
             "name": "Superflat Any%",
             "channel": 992760843303395378,
-            "faq": "**Q:** What do I need to do ?\\n**A:** Beat the game in a superflat world.\\n\\n**Q:** How do I reset fast ?\\n**A:** Atum 1.1.0 and above allows you to reset superflat words.\\n\\n**Q:** How do I play this ?\\n**A:** Here is [Sweep's Superflat Speedrunning Guide](https://docs.google.com/document/d/1O_1eQ0gPwYehcsooXi9M_POrpXmKjZUdCW7HpQE5M7M) !\\n\\n**Q:** Where strongholds ?\\n**A:** [Here!](https://cdn.discordapp.com/attachments/992760843303395378/992771914613395496/unknown.png)\\n\\n**Q:** Is LazyStronghold allowed ?\\n**A:** Yes, but only [this version](https://github.com/Gregor0410/LazyStronghold/releases/tag/v1.1.3) (1.1.3)."
+            "faq": "**Q:** What do I need to do ?\\n**A:** Beat the game in a superflat world.\\n\\n**Q:** How do I reset fast ?\\n**A:** [Atum](https://github.com/VoidXWalker/Atum/releases/latest) 1.1.0 and above allows you to reset superflat worlds.\\n\\n**Q:** How do I play this ?\\n**A:** Here is [Sweep's Superflat Speedrunning Guide](https://docs.google.com/document/d/1O_1eQ0gPwYehcsooXi9M_POrpXmKjZUdCW7HpQE5M7M) !\\n\\n**Q:** Where strongholds ?\\n**A:** [Here!](https://cdn.discordapp.com/attachments/992760843303395378/992771914613395496/unknown.png)\\n\\n**Q:** Is LazyStronghold allowed ?\\n**A:** Yes, but only [this version](https://github.com/Gregor0410/LazyStronghold/releases/tag/v1.1.3) (1.1.3)."
         },
         {
             "name": "Quater",
@@ -83,7 +83,17 @@
         {
             "name": "Mojang Banner",
             "channel": 1006201452957540372,
-            "faq": "**Q:** What is this category ?\\n**A:** This is Mojang Banner%, you need to obtain a [Mojang Banner](https://cdn.discordapp.com/attachments/547121208425185280/1004355004687200407/unknown.png).\\n\\n**Q:** How do I do that ?\\n**A:** You need to make a red banner, then use it in a loom with the \"Thing\" Banner Pattern and a white dye.\\n\\n**Q:** And how do I get the \"Thing\" Banner Pattern ?\\n**A:** You need to get an Enchanted Golden Apple and craft it with a paper."
+            "faq": "**Q:** What is this category ?\\n**A:** This is Mojang Banner%, you need to obtain a [Mojang Banner](https://cdn.discordapp.com/attachments/547121208425185280/1004355004687200407/unknown.png).\\n\\n**Q:** How do I do that ?\\n**A:** You need to make a red-colored banner, then use it in a loom with the \"Thing\" Banner Pattern and a white dye.\\n\\n**Q:** And how do I get the \"Thing\" Banner Pattern ?\\n**A:** You need to get an Enchanted Golden Apple and craft it with a paper."
+        },
+        {
+            "name": "Superflat Mine a Chunk",
+            "channel": 1011575717873582121,
+            "faq": "**Q:** What is this category ?\\n**A:** Mine a whole chunk (except bedrock) in a superflat world.\\n\\n**Q:** How do I reset fast ?\\n**A:** [Atum](https://github.com/VoidXWalker/Atum/releases/latest) 1.1.0 and above allows you to reset superflat worlds.\\n\\n**Q:** How do I deal with slimes ?\\n**A:** Mine the 2 bottom layers first, then hope. You can also dig a chunk close to the Iron Golem so it yeet them to the moon.\\n\\n**Q:** Can I use a custom preset ?\\n**A:** No.\\n\\n**Q:** What shovels are faster ?\\n**A:** Diamond and Gold shovels are the fastest for dirt, but Gold shovel is faster for grass blocks."
+        },
+        {
+            "name": "All Nametags",
+            "channel": 1019932848809050172,
+            "faq": "**Q:** What is the goal of this category ?\\n**A:** Get all nametags easter eggs.\\n> - `jeb_` (sheep)\\n> - `Toast` (rabbit)\\n> - `Dinnerbone` (any mob)\\n> - `Grumm` (any mob)\\n> - `Johnny` (vindicator)\\n\\n**Q:** How do I get nametags ?\\n**A:** You can find them in chests (Dungeon, Mineshaft, Mansion, Ancient City), fish them (0.83%), or trade for them (20 emeralds with a Master Librarian).\\n\\n**Q:** SSG Seed ?\\n**A:** `15061867208` (mansion), found by hyoka !"
         }
     ]
 }
