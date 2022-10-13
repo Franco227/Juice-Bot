@@ -12,7 +12,7 @@ bot = commands.Bot(command_prefix = commands.when_mentioned_or(prefix), help_com
 client_id = "976753770916630528"
 permissions = 8
 invite_link = f"https://discord.com/oauth2/authorize?client_id={client_id}&scope=bot&permissions={permissions}"
-bot_version = "0.13"
+bot_version = "0.14"
 
 
 
@@ -32,7 +32,7 @@ def ping_color(latency):
     values = [5000, 750, 500, 250, 100]
     for i, nbr in enumerate(values):
         if latency >= nbr: return c[i]
-    return green
+    return 65280
 
 def get_token():
     with open("TOKEN", 'r') as f:
@@ -89,9 +89,6 @@ async def on_ready():
     t = str(datetime.now())
     time = f"the {t[8:10]}/{t[5:7]}/{t[:4]} at {t[11:13]}h{t[14:16]}"
     print(f" Bot connected {time}")
-    connected = discord.Embed(title = f"Bot connected {time} !", color = colors.green())
-    try: await bot.get_guild(log_guild).get_channel(log_channel).send(embed = connected)
-    except: pass
     while 1:
         await bot.change_presence(activity = discord.Game(name = get_random_status()))
         await asyncio.sleep(600)
@@ -107,9 +104,10 @@ async def on_message(message):
 
 @bot.event
 async def on_message_delete(message):
-    if message.guild.id != 936167959431364628 or message.channel.id == 1006553062464299109: return
+    if message.guild.id != 936167959431364628 or message.channel.id == 1006553062464299109 or message.is_system(): return
     msg = discord.Embed(title = f"Message deleted", description = message.content, color = colors.red(), timestamp = dtime())
-    msg.set_author(name = f"{message.author} ({message.author.id})", icon_url = message.author.avatar.url)
+    try: msg.set_author(name = f"{message.author} ({message.author.id})", icon_url = message.author.avatar.url)
+    except AttributeError: msg.set_author(name = f"{message.author} ({message.author.id})")
     msg.add_field(name = "Channel", value = f"<#{message.channel.id}>")
     await bot.get_channel(1006553062464299109).send(embed = msg)
 
@@ -224,9 +222,6 @@ async def delete_faq(inter):
         return
     if inter.channel_id not in channels():
         await inter.send("This channel doesn't have an FAQ...", ephemeral = True)
-        return
-    if len(text) > 2000:
-        await inter.send(f"The faq can't be longer than 2000 characters due to discord limitations.\nCharacters : {len(text)}", ephemeral = True)
         return
     with open("categories.json", 'r') as cts:
         cats = json.load(cts)
