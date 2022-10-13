@@ -12,7 +12,7 @@ bot = commands.Bot(command_prefix = commands.when_mentioned_or(prefix), help_com
 client_id = "976753770916630528"
 permissions = 8
 invite_link = f"https://discord.com/oauth2/authorize?client_id={client_id}&scope=bot&permissions={permissions}"
-bot_version = "0.14"
+bot_version = "0.15"
 
 
 
@@ -269,12 +269,14 @@ async def odds(inter, of, nb, nb_trials):
 
 
 
-@bot.slash_command(description = "Add reactions under a poll", options = [
-                    discord.Option(name = "channel_id", description = "The ID of the channel of the poll", required = True),
-                    discord.Option(name = "message_id", description = "The ID of the message of the poll", required = True),
-                    discord.Option(name = "number_of_reactions", description = "Number of reaction, leave empty for a yes/no poll", required = False,
+@bot.slash_command(description = "Create a poll", options = [
+                    discord.Option(name = "channel_id", description = "The ID of the channel you want to send the poll in", required = True),
+                    discord.Option(name = "title", description = "The title of the poll", required = True),
+                    discord.Option(name = "description", description = "The text of the poll", required = True),
+                    discord.Option(name = "end_timestamp", description = "The timestamp of when the poll ends", required = True),
+                    discord.Option(name = "number_of_reactions", description = "Number of reactions, leave empty for a yes/no poll", required = False,
                                     type = dInt, min_value = 2, max_value = 10) ])
-async def poll(inter, channel_id, message_id, number_of_reactions = 0):
+async def poll(inter, channel_id, title, description, end_timestamp, number_of_reactions = 0):
     reactions = ["1️⃣", "2️⃣", "3️⃣", "4️⃣", "5️⃣", "6️⃣", "7️⃣", "8️⃣", "9️⃣", "🔟"]
     if bot.get_guild(936167959431364628).get_role(936168762078560266) not in inter.author.roles:
         await inter.send("You do not have the permission to do that !", ephemeral = True)
@@ -283,17 +285,22 @@ async def poll(inter, channel_id, message_id, number_of_reactions = 0):
     if (channel is None):
         await inter.send("The channel_id is invalid !", ephemeral = True)
         return
-    try: message = await channel.fetch_message(int(message_id))
-    except discord.NotFound:
-        await inter.send("The message_id is invalid !", ephemeral = True)
+    await inter.send("Creating embed...")
+    poll_embed = discord.Embed(title = title, description = description, timestamp = datetime.fromtimestamp(float(end_timestamp)))
+    poll_embed.set_footer(text = "Poll ends at")
+    await inter.edit_original_message(content = "Sending poll...")
+    try: message = await channel.send(content = "<@&942346611399487518>", embed = poll_embed)
+    except:
+        await inter.edit_original_message(content = ":x: The poll could not be sent !")
         return
-    await inter.send("Adding reactions...")
+    await inter.edit_original_message(content = "Adding reactions...")
     if (number_of_reactions == 0):
         await message.add_reaction("🟢")
         await message.add_reaction("🔴")
     else:
         for i in range(number_of_reactions): await message.add_reaction(reactions[i])
-    await inter.edit_original_message(content = "All reactions were added !")
+    await inter.edit_original_message(content = f"Poll sent out successfully !\n\n[Link to poll](https://discord.com/channels/936167959431364628/{channel_id}/{message.id})")
+
 
 
 bot.run(get_token())
