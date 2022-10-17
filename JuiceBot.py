@@ -13,7 +13,7 @@ bot = commands.Bot(command_prefix = commands.when_mentioned_or(prefix), help_com
 client_id = "976753770916630528"
 permissions = 8
 invite_link = f"https://discord.com/oauth2/authorize?client_id={client_id}&scope=bot&permissions={permissions}"
-bot_version = "1.0"
+bot_version = "1.1"
 
 
 
@@ -230,8 +230,85 @@ async def edit_faq(inter, text):
 
 
 
+@bot.slash_command(description = "Display the SSG Seeds used for the current channel's category")
+async def seeds(inter):
+    await inter.send(embed = make_seeds_embed(inter.channel_id))
 
 
+
+@bot.slash_command(description = "Add a SSG Seed for the current channel's category", options = [
+                    discord.Option(name = "seed_name", description = "The new seed's name", required = True),
+                    discord.Option(name = "seed", description = "The seed", required = True),
+                    discord.Option(name = "seed_version", description = "The version of Minecraft the seed should be played on", required = True)
+                    ])
+async def add_seed(inter, seed_name, seed, seed_version):
+    cat = get_cat(inter.channel_id)
+    if bot.get_guild(936167959431364628).get_role(936168762078560266) not in inter.author.roles:
+        await inter.send("You do not have the permission to do that !", ephemeral = True)
+    elif cat is None:
+        await inter.send("This channel is not linked to a category...", ephemeral = True)
+    elif cat.get_seed(seed) is not None:
+        await inter.send("This seed already exist for this category... Maybe you wanted to do /edit_seed ?", ephemeral = True)
+    else:
+        try: seed = int(seed)
+        except ValueError:
+            await inter.send("This seed is not valid.")
+            return
+        new_seed = { "name": seed_name, "seed": seed, "version": seed_version }
+        cat.add_seed(new_seed)
+        await inter.author.send(f"The seed {seed} for the channel <#{inter.channel_id}> was added succesfully !\n\nSeed JSON:```json\n{new_seed}```")
+        await inter.send(f"The seed {seed} was added successfully !")
+        save_categories()
+
+
+
+@bot.slash_command(description = "Edit a seed for the current channel's category", options = [
+                    discord.Option(name = "seed", description = "The seed you want to edit", required = True),
+                    discord.Option(name = "change", description = "What you want to change", required = True, choices = [
+                        discord.OptionChoice(name = "seed", value = "seed"),
+                        discord.OptionChoice(name = "name", value = "name"),
+                        discord.OptionChoice(name = "version", value = "version") ]),
+                    discord.Option(name = "new_value", description = "The new value", required = True) ])
+async def edit_seed(inter, seed, change, new_value):
+    cat = get_cat(inter.channel_id)
+    if bot.get_guild(936167959431364628).get_role(936168762078560266) not in inter.author.roles:
+        await inter.send("You do not have the permission to do that !", ephemeral = True)
+    elif cat is None:
+        await inter.send("This channel is not linked to a category...", ephemeral = True)
+    elif (current_seed := cat.get_seed(seed)) is not None:
+        await inter.send("This seed is not used for this category...", ephemeral = True)
+    else:
+        old_seed = current_seed.to_json()
+        if change == "seed":
+            try: new_value = int(new_value)
+            except ValueError:
+                await inter.send("This seed is not valid.")
+                return
+            current_seed.edit_seed(new_value)
+        elif change == "name": current_seed.edit_name(new_value)
+        elif change == "version": current_seed.edit_version(new_value)
+        await inter.author.send(f"The seed {seed} for the channel <#{inter.channel_id}> was edited successfully !\n\nSeed JSON:```json\n{old_seed}```")
+        await inter.send(f"The seed {seed} was edited successfully !")
+        save_categories()
+
+
+
+@bot.slash_command(description = "Remove a seed from the current channel's category", options = [
+                    discord.Option(name = "seed", description = "The seed you want to remove", required = True) ])
+async def remove_seed(inter, seed):
+    cat = get_cat(inter.channel_id)
+    if bot.get_guild(936167959431364628).get_role(936168762078560266) not in inter.author.roles:
+        await inter.send("You do not have the permission to do that !", ephemeral = True)
+    elif cat is None:
+        await inter.send("This channel is not linked to a category...", ephemeral = True)
+    elif (old_seed := cat.get_seed(seed)) is None:
+        await inter.send("This seed is not used for this category...", ephemeral = True)
+    else:
+        old_seed = old_seed.to_json()
+        cat.remove_seed(seed)
+        await inter.author.send(f"The seed {seed} for the channel <#{inter.channel_id}> was deleted successfully !\n\nSeed JSON:```json\n{old_seed}```")
+        await inter.send(f"The seed {seed} was deleted succesfully !")
+        save_categories()
 
 
 
