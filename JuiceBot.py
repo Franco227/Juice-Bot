@@ -4,6 +4,7 @@ from disnake.ext import commands
 from datetime import datetime
 from random import randrange
 from scipy.stats import binom
+from category import Category
 
 prefix = '/'
 intents = discord.Intents.all()
@@ -12,7 +13,7 @@ bot = commands.Bot(command_prefix = commands.when_mentioned_or(prefix), help_com
 client_id = "976753770916630528"
 permissions = 8
 invite_link = f"https://discord.com/oauth2/authorize?client_id={client_id}&scope=bot&permissions={permissions}"
-bot_version = "0.15"
+bot_version = "1.0"
 
 
 
@@ -49,34 +50,40 @@ def get_random_status():
 ##### CATEGORIES #####
 ######################
 
-
-def categories():
+def load_categories():
     with open("categories.json", 'r') as cats:
-        return json.load(cats).get("categories")
+        categories = json.load(cats).get("categories")
+    return [Category(data) for data in categories]
 
-def channels():
-    return [cat.get("channel") for cat in categories()]
+categories = load_categories()
 
-def get_cat(channel):
-    for cat in categories():
-        if cat.get("channel") == channel:
-            return cat
-    return None
+def save_categories():
+    cats = { "categories": [cat.to_json() for cat in categories] }
+    with open("categories.json", 'w') as file:
+        json.dump(cats, file, indent = 4)
+        file.truncate()
+    print("Categories saved.")
 
-def get_faq(channel):
-    if channel not in channels():
-        return "This channel doesn't have an FAQ..."
-    return get_cat(channel).get("faq").replace("\\n", "\n")
 
-def get_faq_embed(channel):
-    if channel not in channels():
-        return discord.Embed(title = "Unknown Category", description = "This channel doesn't have an FAQ...", color = colors.red())
-    cat = get_cat(channel)
-    return discord.Embed(title = cat.get("name"), description = cat.get("faq").replace("\\n", "\n"), color = colors.green())
+def get_cat(id: int):
+    try: i = [cat.id for cat in categories].index(id)
+    except ValueError: return None
+    return categories[i]
 
-def get_cat_index(cat):
-    return categories().index(cat)
+def make_faq_embed(id: int):
+    cat = get_cat(id)
+    if cat == None:
+        return discord.Embed(title = "Error", description = "This channel isn't linked to a category...", color = colors.red())
+    return discord.Embed(title = cat.name, description = cat.faq, color = colors.green())
 
+def make_seeds_embed(id: int):
+    cat = get_cat(id)
+    if cat == None:
+        return discord.Embed(title = "Error", description = "This channel isn't linked to a category...", color = colors.red())
+    embed = discord.Embed(title = cat.name, description = f"{len(cat.seeds)} seed{'s' if len(cat.seeds) > 1 else ''} found.", color = colors.green())
+    for seed in cat.seeds:
+        embed.add_field(name = f"{seed.name} ({seed.version})", value = f"`{seed.seed}`", inline = False)
+    return embed
 
 
 ######################
@@ -140,7 +147,6 @@ async def dif(inter):
 
 
 
-
 @bot.slash_command(description = "Display bot latency")
 async def ping(inter):
     timePing = time.monotonic()
@@ -150,6 +156,7 @@ async def ping(inter):
     else: seconds = ""
     embed = discord.Embed(title = ":ping_pong: **Pong !**", description = f"**:robot: Bot Latency :** `{latency}ms`{seconds}", color = ping_color(latency))
     await inter.edit_original_message(content = "", embed = embed)
+
 
 
 @bot.slash_command(description = "Display the requirements for a new category to be added")
@@ -163,75 +170,69 @@ async def requirements(inter):
     await inter.send(embed = embed)
 
 
+
+@bot.slash_command(description = "Create an category for the current channel", options = [
+                    discord.Option(name = "name", description = "The name of the category", required = True),
+                    discord.Option(name = "faq", description = "The FAQ of the category", required = False) ])
+async def new_category(inter, name, faq = "FAQ not available yet"):
+    cat = get_cat(inter.channel_id)
+    if bot.get_guild(936167959431364628).get_role(936168762078560266) not in inter.author.roles:
+        await inter.send("You do not have the permission to do that !", ephemeral = True)
+    elif cat is not None:
+        await inter.send("This channel is already linked to a category... Maybe you wanted to do /update_faq ?", ephemeral = True)
+    elif len(faq) > 2000:
+        await inter.send(f"The faq can't be longer than 2000 characters due to discord limitations.\nCharacters : {len(faq)}", ephemeral = True)
+    else:
+        new_cat = Category({ "name": name, "channel": inter.channel_id, "faq": faq, "ssg_seeds": [] })
+        categories.append(new_cat)
+        await inter.author.send(f"The category for the channel <#{inter.channel_id}> has been created successfully!\n\nCategory JSON:```json\n{new_cat.to_json()}```")
+        await inter.send("The category for the current channel has been created successfully!")
+        save_categories()
+
+
+
+@bot.slash_command(description = "Delete the current channel's category")
+async def delete_category(inter):
+    cat = get_cat(inter.channel_id)
+    if bot.get_guild(936167959431364628).get_role(936168762078560266) not in inter.author.roles:
+        await inter.send("You do not have the permission to do that !", ephemeral = True)
+    elif cat is None:
+        await inter.send("This channel doesn't have an FAQ...", ephemeral = True)
+    else:
+        old_cat = cat.to_json()
+        categories.remove(cat)
+        await inter.author.send(f"The category for the channel <#{inter.channel_id}> has been successfully deleted !\n\nCategory JSON:```json\n{old_cat}```")
+        await inter.send("The category for the current channel has been successfully deleted !")
+        save_categories()
+
+
+
 @bot.slash_command(description = "Display the FAQ for the current channel")
 async def faq(inter):
-    await inter.send(embed = get_faq_embed(inter.channel_id))
+    await inter.send(embed = make_faq_embed(inter.channel_id))
 
 
 
-@bot.slash_command(description = "Update the FAQ of the current channel",
+@bot.slash_command(description = "Edit the FAQ of the current channel",
                     options = [discord.Option(name = "text", description = "The new FAQ", required = True)])
-async def update_faq(inter, text):
+async def edit_faq(inter, text):
+    cat = get_cat(inter.channel_id)
     if bot.get_guild(936167959431364628).get_role(936168762078560266) not in inter.author.roles:
         await inter.send("You do not have the permission to do that !", ephemeral = True)
-        return
-    if inter.channel_id not in channels():
-        await inter.send("This channel doesn't have an FAQ... Maybe you wanted to do /new_faq ?", ephemeral = True)
-        return
-    with open("categories.json", 'r') as cts:
-        cats = json.load(cts)
-        faq = get_cat(inter.channel_id).get("faq")
-        cats.get("categories")[get_cat_index(get_cat(inter.channel_id))]["faq"] = text
-    with open("categories.json", 'w') as cts:
-        json.dump(cats, cts, indent = 4)
-        cts.truncate()
-    await inter.author.send(f"The FAQ for the channel <#{inter.channel_id}> got updated successfully !\n\nOld FAQ:```{faq}```New FAQ:```{text}```")
-    await inter.send("The FAQ for the current channel got updated successfully !")
+    elif cat is None:
+        await inter.send("This channel isn't linked to a category... Maybe you wanted to do /new_category ?", ephemeral = True)
+    else:
+        old_faq = cat.faq
+        cat.edit_faq(text)
+        await inter.author.send(f"The FAQ for the channel <#{inter.channel_id}> got updated successfully !\n\nOld FAQ:```{old_faq}```New FAQ:```{text}```")
+        await inter.send("The FAQ for the current channel got updated successfully !")
+        save_categories()
 
 
 
-@bot.slash_command(description = "Create an FAQ for the current channel", options = [
-                    discord.Option(name = "name", description = "The name of the category", required = True),
-                    discord.Option(name = "text", description = "The new FAQ", required = True) ])
-async def new_faq(inter, name, text):
-    if bot.get_guild(936167959431364628).get_role(936168762078560266) not in inter.author.roles:
-        await inter.send("You do not have the permission to do that !", ephemeral = True)
-        return
-    if inter.channel_id in channels():
-        await inter.send("This channel already has an FAQ... Maybe you wanted to do /update_faq ?", ephemeral = True)
-        return
-    if len(text) > 2000:
-        await inter.send(f"The faq can't be longer than 2000 characters due to discord limitations.\nCharacters : {len(text)}", ephemeral = True)
-        return
-    with open("categories.json", 'r') as cts:
-        cats = json.load(cts)
-        new_cat = { "name": name, "channel": inter.channel_id, "faq": text }
-        cats.get("categories").append(new_cat)
-    with open("categories.json", 'w') as cts:
-        json.dump(cats, cts, indent = 4)
-        cts.truncate()
-    await inter.author.send(f"The FAQ for the channel <#{inter.channel_id}> has been set successfully!\n\nFAQ:```{text}```")
-    await inter.send("The FAQ for the current channel has been set successfully!")
 
 
 
-@bot.slash_command(description = "Delete the current channel's FAQ")
-async def delete_faq(inter):
-    if bot.get_guild(936167959431364628).get_role(936168762078560266) not in inter.author.roles:
-        await inter.send("You do not have the permission to do that !", ephemeral = True)
-        return
-    if inter.channel_id not in channels():
-        await inter.send("This channel doesn't have an FAQ...", ephemeral = True)
-        return
-    with open("categories.json", 'r') as cts:
-        cats = json.load(cts)
-        old_cat = get_cat(inter.channel_id)
-        cats.get("categories").remove(old_cat)
-    with open("categories.json", 'w') as cts:
-        json.dump(cats, cts, indent = 4)
-        cts.truncate()
-    await inter.author.send(f"The FAQ for the channel <#{inter.channel_id}> has been successfully deleted !\n\nOld FAQ:```{old_cat.get('faq')}```")
-    await inter.send("The FAQ for the current channel has been successfully deleted !")
 
 
 
