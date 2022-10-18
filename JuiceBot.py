@@ -14,7 +14,7 @@ mod_role_id = 936168762078560266
 permissions = 8
 invite_link = f"https://discord.com/oauth2/authorize?client_id={client_id}&scope=bot&permissions={permissions}"
 bot = commands.Bot(command_prefix = commands.when_mentioned_or(prefix), help_command = None, intents = intents, test_guilds = [guild_id])
-bot_version = "1.2"
+bot_version = "1.3"
 
 
 
@@ -186,8 +186,8 @@ async def new_category(inter, name, faq = "FAQ not available yet"):
     else:
         new_cat = Category({ "name": name, "channel": inter.channel_id, "faq": faq, "ssg_seeds": [] })
         categories.append(new_cat)
-        await inter.author.send(f"The category for the channel <#{inter.channel_id}> has been created successfully!\n\nCategory JSON:```json\n{new_cat.to_json()}```")
         await inter.send("The category for the current channel has been created successfully!")
+        print(f"Category {new_cat.name} added by {inter.author}.", end = "")
         save_categories()
 
 
@@ -204,6 +204,7 @@ async def delete_category(inter):
         categories.remove(cat)
         await inter.author.send(f"The category for the channel <#{inter.channel_id}> has been successfully deleted !\n\nCategory JSON:```json\n{old_cat}```")
         await inter.send("The category for the current channel has been successfully deleted !")
+        print(f"Category {old_cat.get('name')} deleted by {inter.author}.", end = "")
         save_categories()
 
 
@@ -225,8 +226,9 @@ async def edit_faq(inter, text):
     else:
         old_faq = cat.faq
         cat.edit_faq(text)
-        await inter.author.send(f"The FAQ for the channel <#{inter.channel_id}> got updated successfully !\n\nOld FAQ:```{old_faq}```New FAQ:```{text}```")
+        await inter.author.send(f"The FAQ for the channel <#{inter.channel_id}> got updated successfully !\n\nOld FAQ:```{old_faq}```")
         await inter.send("The FAQ for the current channel got updated successfully !")
+        print(f"FAQ of {cat.name} edited by {inter.author}.", end = "")
         save_categories()
 
 
@@ -257,8 +259,8 @@ async def add_seed(inter, seed_name, seed, seed_version):
             return
         new_seed = { "name": seed_name, "seed": seed, "version": seed_version }
         cat.add_seed(new_seed)
-        await inter.author.send(f"The seed {seed} for the channel <#{inter.channel_id}> was added succesfully !\n\nSeed JSON:```json\n{new_seed}```")
         await inter.send(f"The seed {seed} was added successfully !")
+        print(f"Seed {new_seed.get('seed')} added to {cat.name} by {inter.author}.", end = "")
         save_categories()
 
 
@@ -288,8 +290,8 @@ async def edit_seed(inter, seed, change, new_value):
             current_seed.edit_seed(new_value)
         elif change == "name": current_seed.edit_name(new_value)
         elif change == "version": current_seed.edit_version(new_value)
-        await inter.author.send(f"The seed {seed} for the channel <#{inter.channel_id}> was edited successfully !\n\nSeed JSON:```json\n{old_seed}```")
-        await inter.send(f"The seed {seed} was edited successfully !")
+        await inter.send(f"The seed {seed} was edited successfully !\n\nOld Seed JSON:```json\n{old_seed}```")
+        print(f"Seed {seed} for {cat.name} edited by {inter.author}.", end = "")
         save_categories()
 
 
@@ -307,8 +309,8 @@ async def remove_seed(inter, seed):
     else:
         old_seed = old_seed.to_json()
         cat.remove_seed(seed)
-        await inter.author.send(f"The seed {seed} for the channel <#{inter.channel_id}> was deleted successfully !\n\nSeed JSON:```json\n{old_seed}```")
-        await inter.send(f"The seed {seed} was deleted succesfully !")
+        await inter.send(f"The seed {seed} was deleted succesfully !\n\nSeed JSON:```json\n{old_seed}```")
+        print(f"Seed {seed} for {cat.name} removed by {inter.author}.", end = "")
         save_categories()
 
 
