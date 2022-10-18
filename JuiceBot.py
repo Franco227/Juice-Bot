@@ -8,12 +8,13 @@ from category import Category
 
 prefix = '/'
 intents = discord.Intents.all()
-bot = commands.Bot(command_prefix = commands.when_mentioned_or(prefix), help_command = None, intents = intents, test_guilds = [936167959431364628])
-
-client_id = "976753770916630528"
+client_id = 976753770916630528
+guild_id = 936167959431364628
+mod_role_id = 936168762078560266
 permissions = 8
 invite_link = f"https://discord.com/oauth2/authorize?client_id={client_id}&scope=bot&permissions={permissions}"
-bot_version = "1.1"
+bot = commands.Bot(command_prefix = commands.when_mentioned_or(prefix), help_command = None, intents = intents, test_guilds = [guild_id])
+bot_version = "1.2"
 
 
 
@@ -104,14 +105,14 @@ async def on_ready():
 @bot.event
 async def on_message(message):
     if message.author.bot: return
-    if message.guild.id != 936167959431364628: return
+    if message.guild.id != guild_id: return
     msg = message.content.split(' ')
     if "virst" in msg or "virt" in msg: await message.reply("crimson*")
 
 
 @bot.event
 async def on_message_delete(message):
-    if message.guild.id != 936167959431364628 or message.channel.id == 1006553062464299109 or message.is_system(): return
+    if message.guild.id != guild_id or message.channel.id == 1006553062464299109 or message.is_system(): return
     msg = discord.Embed(title = f"Message deleted", description = message.content, color = colors.red(), timestamp = dtime())
     try: msg.set_author(name = f"{message.author} ({message.author.id})", icon_url = message.author.avatar.url)
     except AttributeError: msg.set_author(name = f"{message.author} ({message.author.id})")
@@ -133,7 +134,7 @@ async def version(inter):
 
 @bot.slash_command(description = "Change the bot's status")
 async def change_status(inter):
-    if bot.get_guild(936167959431364628).get_role(936168762078560266) not in inter.author.roles:
+    if bot.get_guild(guild_id).get_role(mod_role_id) not in inter.author.roles:
         await inter.send("You do not have the permission to do that !", ephemeral = True)
         return
     await bot.change_presence(activity = discord.Game(name = get_random_status()))
@@ -176,7 +177,7 @@ async def requirements(inter):
                     discord.Option(name = "faq", description = "The FAQ of the category", required = False) ])
 async def new_category(inter, name, faq = "FAQ not available yet"):
     cat = get_cat(inter.channel_id)
-    if bot.get_guild(936167959431364628).get_role(936168762078560266) not in inter.author.roles:
+    if bot.get_guild(guild_id).get_role(mod_role_id) not in inter.author.roles:
         await inter.send("You do not have the permission to do that !", ephemeral = True)
     elif cat is not None:
         await inter.send("This channel is already linked to a category... Maybe you wanted to do /update_faq ?", ephemeral = True)
@@ -194,7 +195,7 @@ async def new_category(inter, name, faq = "FAQ not available yet"):
 @bot.slash_command(description = "Delete the current channel's category")
 async def delete_category(inter):
     cat = get_cat(inter.channel_id)
-    if bot.get_guild(936167959431364628).get_role(936168762078560266) not in inter.author.roles:
+    if bot.get_guild(guild_id).get_role(mod_role_id) not in inter.author.roles:
         await inter.send("You do not have the permission to do that !", ephemeral = True)
     elif cat is None:
         await inter.send("This channel doesn't have an FAQ...", ephemeral = True)
@@ -217,7 +218,7 @@ async def faq(inter):
                     options = [discord.Option(name = "text", description = "The new FAQ", required = True)])
 async def edit_faq(inter, text):
     cat = get_cat(inter.channel_id)
-    if bot.get_guild(936167959431364628).get_role(936168762078560266) not in inter.author.roles:
+    if bot.get_guild(guild_id).get_role(mod_role_id) not in inter.author.roles:
         await inter.send("You do not have the permission to do that !", ephemeral = True)
     elif cat is None:
         await inter.send("This channel isn't linked to a category... Maybe you wanted to do /new_category ?", ephemeral = True)
@@ -243,7 +244,7 @@ async def seeds(inter):
                     ])
 async def add_seed(inter, seed_name, seed, seed_version):
     cat = get_cat(inter.channel_id)
-    if bot.get_guild(936167959431364628).get_role(936168762078560266) not in inter.author.roles:
+    if bot.get_guild(guild_id).get_role(mod_role_id) not in inter.author.roles:
         await inter.send("You do not have the permission to do that !", ephemeral = True)
     elif cat is None:
         await inter.send("This channel is not linked to a category...", ephemeral = True)
@@ -271,7 +272,7 @@ async def add_seed(inter, seed_name, seed, seed_version):
                     discord.Option(name = "new_value", description = "The new value", required = True) ])
 async def edit_seed(inter, seed, change, new_value):
     cat = get_cat(inter.channel_id)
-    if bot.get_guild(936167959431364628).get_role(936168762078560266) not in inter.author.roles:
+    if bot.get_guild(guild_id).get_role(mod_role_id) not in inter.author.roles:
         await inter.send("You do not have the permission to do that !", ephemeral = True)
     elif cat is None:
         await inter.send("This channel is not linked to a category...", ephemeral = True)
@@ -297,7 +298,7 @@ async def edit_seed(inter, seed, change, new_value):
                     discord.Option(name = "seed", description = "The seed you want to remove", required = True) ])
 async def remove_seed(inter, seed):
     cat = get_cat(inter.channel_id)
-    if bot.get_guild(936167959431364628).get_role(936168762078560266) not in inter.author.roles:
+    if bot.get_guild(guild_id).get_role(mod_role_id) not in inter.author.roles:
         await inter.send("You do not have the permission to do that !", ephemeral = True)
     elif cat is None:
         await inter.send("This channel is not linked to a category...", ephemeral = True)
@@ -356,7 +357,7 @@ async def odds(inter, of, nb, nb_trials):
                                     type = dInt, min_value = 2, max_value = 10) ])
 async def poll(inter, channel_id, title, description, end_timestamp, number_of_reactions = 0):
     reactions = ["1️⃣", "2️⃣", "3️⃣", "4️⃣", "5️⃣", "6️⃣", "7️⃣", "8️⃣", "9️⃣", "🔟"]
-    if bot.get_guild(936167959431364628).get_role(936168762078560266) not in inter.author.roles:
+    if bot.get_guild(guild_id).get_role(mod_role_id) not in inter.author.roles:
         await inter.send("You do not have the permission to do that !", ephemeral = True)
         return
     channel = bot.get_channel(int(channel_id))
@@ -377,7 +378,7 @@ async def poll(inter, channel_id, title, description, end_timestamp, number_of_r
         await message.add_reaction("🔴")
     else:
         for i in range(number_of_reactions): await message.add_reaction(reactions[i])
-    await inter.edit_original_message(content = f"Poll sent out successfully !\n\n[Link to poll](https://discord.com/channels/936167959431364628/{channel_id}/{message.id})")
+    await inter.edit_original_message(content = f"Poll sent out successfully !\n\n[Link to poll](https://discord.com/channels/{guild_id}/{channel_id}/{message.id})")
 
 
 
