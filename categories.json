@@ -33,13 +33,45 @@
             "name": "Creative No Inventory",
             "channel": 936386037264039987,
             "faq": "**Q:** What is this category ?\n **A:** This is Creative No Inventory, you have to beat the game in creative, without using the creative inventory.\n \n **Q:** Can I use commands ?\n **A:** Using commands or switching gamemode is forbidden, and we recommand disabling cheats when creating the world.\n \n **Q:** How do I pickup a block or duplicate an item ?\n **A:** Use middle click to pickup a block, or get a stack of the item you middle clicked.\n \n **Q:** I can't craft in creative, how can I make eyes of ender or other stuff ?\n **A:** You have to find a naturally generated crafting table. All structures generated with one are listed [here!](https://discord.com/channels/936167959431364628/936386037264039987/959664336396226581)]\n \n **Q:** How do I kill blazes or endermen ?\n **A:** The main strat is to use beds, since they blow up in the nether. You do not have to kill him with your bare fists. Reminder : You have to punch the blaze before blowing him up, or else he will never drop anything.\n \n**Q:** Do I have to beat the ender dragon ?\n **A:** No, you only need to enter the credits. To do this, you can pickup the end portal frames, and rebuild the portal when entering the end.",
-            "seeds": []
+            "seeds": [
+                {
+                    "name": "Pre 1.8",
+                    "seed": -4656319252538146326,
+                    "version": "1.7.10"
+                },
+                {
+                    "name": "1.8.x Blacksmith",
+                    "seed": -7603714784914323554,
+                    "version": "1.8.9"
+                },
+                {
+                    "name": "1.8.x Temple",
+                    "seed": 225874918561344128,
+                    "version": "1.8.9"
+                },
+                {
+                    "name": "1.9 - 1.15",
+                    "seed": 1154047404513693247,
+                    "version": "1.15.2"
+                },
+                {
+                    "name": "1.16+",
+                    "seed": -576742227278694724,
+                    "version": "1.16.1"
+                }
+            ]
         },
         {
             "name": "Break Beenest",
             "channel": 936174026496290856,
             "faq": "**Q:** What is this category ?\n **A:** Read the title.\n \n **Q:** I got a time of under 450ms, why did my run got retimed to 450ms ?\n **A:** The time it takes to break a beenest is 450ms, even if your timer says otherwise. The only way to do it in less than 450ms is to loot a gold axe in a ruined portal chest then break the beenest.\n \n **Q:** Is there an SSG seed with a gold axe in a ruined portal ?\n**A:** Yes! `1108912127130472088` (1.16.1), seed found by DylanDC14.\n\n**Q:** SpeedrunIGT Extension ?\n**A:** [JSON Extension](https://discord.com/channels/936167959431364628/936174026496290856/1017356525133643776) (Put it in /speedrunigt/categories/), [Mod Extension](https://github.com/RedLime/BreakBeeNestExtension/releases/latest) (Put it in mods folder). You then just have to select \"Break Beenest\" in speedrunigt category (or \"Break Bee Nest\" for the mod extension)",
-            "seeds": []
+            "seeds": [
+                {
+                    "name": "Ruined Portal Seed",
+                    "seed": 1108912127130472088,
+                    "version": "1.16.1"
+                }
+            ]
         },
         {
             "name": "All Arthropods",
@@ -51,7 +83,28 @@
             "name": "All Buckets",
             "channel": 936385782145490944,
             "faq": "FAQ not available yet",
-            "seeds": []
+            "seeds": [
+                {
+                    "name": "Pre 1.13",
+                    "seed": -8158987572288280968,
+                    "version": "1.12.2"
+                },
+                {
+                    "name": "1.13 - 1.16",
+                    "seed": 6277594033501035,
+                    "version": "1.16.1"
+                },
+                {
+                    "name": "1.13 - 1.16 but less rng",
+                    "seed": 102954058,
+                    "version": "1.16.1"
+                },
+                {
+                    "name": "1.17 - 1.18",
+                    "seed": 7632743,
+                    "version": "1.18.2"
+                }
+            ]
         },
         {
             "name": "All Deaths",
@@ -117,7 +170,18 @@
             "name": "Mojang Banner",
             "channel": 1006201452957540372,
             "faq": "**Q:** What is this category ?\n**A:** This is Mojang Banner%, you need to obtain a [Mojang Banner](https://cdn.discordapp.com/attachments/547121208425185280/1004355004687200407/unknown.png).\n\n**Q:** How do I do that ?\n**A:** You need to make a red-colored banner, then use it in a loom with the \"Thing\" Banner Pattern and a white dye.\n\n**Q:** And how do I get the \"Thing\" Banner Pattern ?\n**A:** You need to get an Enchanted Golden Apple and craft it with a paper.",
-            "seeds": []
+            "seeds": [
+                {
+                    "name": "1.14+",
+                    "seed": 77035255560112728,
+                    "version": "1.16.1"
+                },
+                {
+                    "name": "Pre-1.14",
+                    "seed": 9700553841730414,
+                    "version": "1.13.2"
+                }
+            ]
         },
         {
             "name": "Superflat Mine a Chunk",
@@ -129,6 +193,35 @@
             "name": "All Nametags",
             "channel": 1019932848809050172,
             "faq": "**Q:** What is the goal of this category ?\n**A:** Get all nametags easter eggs.\n> - `jeb_` (sheep)\n> - `Toast` (rabbit)\n> - `Dinnerbone` (any mob)\n> - `Grumm` (any mob)\n> - `Johnny` (vindicator)\n\n**Q:** How do I get nametags ?\n**A:** You can find them in chests (Dungeon, Mineshaft, Mansion, Ancient City), fish them (0.83%), or trade for them (20 emeralds with a Master Librarian).\n\n**Q:** SSG Seed ?\n**A:** `15061867208` (mansion), found by hyoka !",
+            "seeds": []
+        },
+        {
+            "name": "Bullseye%",
+            "channel": 1016976593031274576,
+            "faq": "FAQ not available yet",
+            "seeds": []
+        },
+        {
+            "name": "Aether",
+            "channel": 1038841498357215443,
+            "faq": "FAQ not available yet",
+            "seeds": [
+                {
+                    "name": "Trading Seed",
+                    "seed": 124524015776691193,
+                    "version": "1.13.2"
+                },
+                {
+                    "name": "River Seed",
+                    "seed": 3835014000747209056,
+                    "version": "1.16.1"
+                }
+            ]
+        },
+        {
+            "name": "All Structures",
+            "channel": 1034561139977224335,
+            "faq": "**Q:** Guide ?\n**A:** [All Structures guide by ZeBlackStrat](https://docs.google.com/document/d/1RL0EMzk142zwcKYlwtZMcJC64wSuMvUGvSTYPBEth60/edit?usp=sharing)",
             "seeds": []
         }
     ]
