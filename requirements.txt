@@ -1,0 +1,4 @@
+aiohttp>=3.8.3
+disnake>=2.7.0
+numpy>=1.23.5
+scipy>=1.9.3
