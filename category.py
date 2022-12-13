@@ -68,12 +68,14 @@ class Category():
         try: seed_id = int(seed_id)
         except ValueError: return None
         seed = self.get_seed(seed_id)
-        if seed == None: return None
+        if seed is None: return None
         seed.edit_name(data.get("name"))
         seed.edit_seed(data.get("seed"))
         seed.edit_version(data.get("version"))
         return seed.seed
 
+    def sort_seeds(self):
+        self.seeds = sorted(self.seeds, key = lambda seed: list(map(int, seed.version.split('.'))) + [seed.name])
 
     def to_json(self):
         return {

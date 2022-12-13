@@ -14,7 +14,7 @@ mod_role_id = 936168762078560266
 permissions = 8
 invite_link = f"https://discord.com/oauth2/authorize?client_id={client_id}&scope=bot&permissions={permissions}"
 bot = commands.Bot(command_prefix = commands.when_mentioned_or(prefix), help_command = None, intents = intents, test_guilds = [guild_id])
-bot_version = "1.4"
+bot_version = "1.4.1"
 
 
 
@@ -76,13 +76,13 @@ def get_cat(id: int):
 
 def make_faq_embed(id: int):
     cat = get_cat(id)
-    if cat == None:
+    if cat is None:
         return discord.Embed(title = "Error", description = "This channel isn't linked to a category...", color = colors.red())
     return discord.Embed(title = cat.name, description = cat.faq, color = colors.green())
 
 def make_seeds_embed(id: int):
     cat = get_cat(id)
-    if cat == None:
+    if cat is None:
         return discord.Embed(title = "Error", description = "This channel isn't linked to a category...", color = colors.red())
     embed = discord.Embed(title = cat.name, description = f"{len(cat.seeds)} seed{'s' if len(cat.seeds) > 1 else ''} found.", color = colors.green())
     for seed in cat.seeds:
@@ -265,6 +265,7 @@ async def add_seed(inter, seed_name, seed, seed_version):
         cat.add_seed(new_seed)
         await inter.send(f"The seed {seed} was added successfully !")
         print(f"Seed {new_seed.get('seed')} added to {cat.name} by {inter.author}.", end = "")
+        cat.sort_seeds()
         save_categories()
 
 
@@ -296,6 +297,7 @@ async def edit_seed(inter, seed, change, new_value):
         elif change == "version": current_seed.edit_version(new_value)
         await inter.send(f"The seed {seed} was edited successfully !\n\nOld Seed JSON:```json\n{old_seed}```")
         print(f"Seed {seed} for {cat.name} edited by {inter.author}.", end = "")
+        cat.sort_seeds()
         save_categories()
 
 
