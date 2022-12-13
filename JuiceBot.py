@@ -14,7 +14,7 @@ mod_role_id = 936168762078560266
 permissions = 8
 invite_link = f"https://discord.com/oauth2/authorize?client_id={client_id}&scope=bot&permissions={permissions}"
 bot = commands.Bot(command_prefix = commands.when_mentioned_or(prefix), help_command = None, intents = intents, test_guilds = [guild_id])
-bot_version = "1.3"
+bot_version = "1.4"
 
 
 
@@ -24,6 +24,9 @@ bot_version = "1.3"
 
 
 dInt = discord.OptionType.integer
+dRole = discord.OptionType.role
+dChan = discord.OptionType.channel
+dAttach = discord.OptionType.attachment
 colors = discord.Color
 
 def dtime():
@@ -63,7 +66,7 @@ def save_categories():
     with open("categories.json", 'w') as file:
         json.dump(cats, file, indent = 4)
         file.truncate()
-    print("Categories saved.")
+    print(" Categories saved.")
 
 
 def get_cat(id: int):
@@ -105,14 +108,15 @@ async def on_ready():
 @bot.event
 async def on_message(message):
     if message.author.bot: return
-    if message.guild.id != guild_id: return
+    if message.guild is None: print(f"DM from {message.author}: {message.content}")
+    if message.guild is None or message.guild.id != guild_id: return
     msg = message.content.split(' ')
     if "virst" in msg or "virt" in msg: await message.reply("crimson*")
 
 
 @bot.event
 async def on_message_delete(message):
-    if message.guild.id != guild_id or message.channel.id == 1006553062464299109 or message.is_system(): return
+    if message.guild is None or message.guild.id != guild_id or message.channel.id == 1006553062464299109 or message.is_system(): return
     msg = discord.Embed(title = f"Message deleted", description = message.content, color = colors.red(), timestamp = dtime())
     try: msg.set_author(name = f"{message.author} ({message.author.id})", icon_url = message.author.avatar.url)
     except AttributeError: msg.set_author(name = f"{message.author} ({message.author.id})")
@@ -184,7 +188,7 @@ async def new_category(inter, name, faq = "FAQ not available yet"):
     elif len(faq) > 2000:
         await inter.send(f"The faq can't be longer than 2000 characters due to discord limitations.\nCharacters : {len(faq)}", ephemeral = True)
     else:
-        new_cat = Category({ "name": name, "channel": inter.channel_id, "faq": faq, "ssg_seeds": [] })
+        new_cat = Category({ "name": name, "channel": inter.channel_id, "faq": faq, "seeds": [] })
         categories.append(new_cat)
         await inter.send("The category for the current channel has been created successfully!")
         print(f"Category {new_cat.name} added by {inter.author}.", end = "")
@@ -278,7 +282,7 @@ async def edit_seed(inter, seed, change, new_value):
         await inter.send("You do not have the permission to do that !", ephemeral = True)
     elif cat is None:
         await inter.send("This channel is not linked to a category...", ephemeral = True)
-    elif (current_seed := cat.get_seed(seed)) is not None:
+    elif (current_seed := cat.get_seed(seed)) is None:
         await inter.send("This seed is not used for this category...", ephemeral = True)
     else:
         old_seed = current_seed.to_json()
@@ -351,26 +355,29 @@ async def odds(inter, of, nb, nb_trials):
 
 
 @bot.slash_command(description = "Create a poll", options = [
-                    discord.Option(name = "channel_id", description = "The ID of the channel you want to send the poll in", required = True),
+                    discord.Option(name = "channel", description = "The channel you want to send the poll in", required = True, type = dChan),
                     discord.Option(name = "title", description = "The title of the poll", required = True),
                     discord.Option(name = "description", description = "The text of the poll", required = True),
                     discord.Option(name = "end_timestamp", description = "The timestamp of when the poll ends", required = True),
                     discord.Option(name = "number_of_reactions", description = "Number of reactions, leave empty for a yes/no poll", required = False,
-                                    type = dInt, min_value = 2, max_value = 10) ])
-async def poll(inter, channel_id, title, description, end_timestamp, number_of_reactions = 0):
+                                    type = dInt, min_value = 2, max_value = 10),
+                    discord.Option(name = "mention", description = "The role you want to ping (default is Announcements)", required = False, type = dRole),
+                    discord.Option(name = "attachment", description = "The attachment of the poll", required = False, type = dAttach)
+                    ])
+async def poll(inter, channel, title, description, end_timestamp, number_of_reactions = 0, mention = None, attachment = None):
     reactions = ["1️⃣", "2️⃣", "3️⃣", "4️⃣", "5️⃣", "6️⃣", "7️⃣", "8️⃣", "9️⃣", "🔟"]
     if bot.get_guild(guild_id).get_role(mod_role_id) not in inter.author.roles:
         await inter.send("You do not have the permission to do that !", ephemeral = True)
         return
-    channel = bot.get_channel(int(channel_id))
-    if (channel is None):
-        await inter.send("The channel_id is invalid !", ephemeral = True)
-        return
     await inter.send("Creating embed...")
-    poll_embed = discord.Embed(title = title, description = description, timestamp = datetime.fromtimestamp(float(end_timestamp)))
+    poll_embed = discord.Embed(title = title, description = description.replace("\\n","\n"), timestamp = datetime.fromtimestamp(float(end_timestamp)))
     poll_embed.set_footer(text = "Poll ends at")
+    note = ""
+    if attachment is not None:
+        if attachment.content_type.startswith("image"): poll_embed.set_image(url = attachment.url)
+        else: note = "\nNote: The attachment could not be added to the poll."
     await inter.edit_original_message(content = "Sending poll...")
-    try: message = await channel.send(content = "<@&942346611399487518>", embed = poll_embed)
+    try: message = await channel.send(content = mention.mention if mention is not None else "", embed = poll_embed)
     except:
         await inter.edit_original_message(content = ":x: The poll could not be sent !")
         return
@@ -380,7 +387,51 @@ async def poll(inter, channel_id, title, description, end_timestamp, number_of_r
         await message.add_reaction("🔴")
     else:
         for i in range(number_of_reactions): await message.add_reaction(reactions[i])
-    await inter.edit_original_message(content = f"Poll sent out successfully !\n\n[Link to poll](https://discord.com/channels/{guild_id}/{channel_id}/{message.id})")
+    await inter.edit_original_message(content = f"Poll sent out successfully !\n\n[Link to poll](https://discord.com/channels/{guild_id}/{channel.id}/{message.id}){note}")
+
+
+
+@bot.slash_command(description = "Edit an existing poll", options = [
+                    discord.Option(name = "channel", description = "The channel where the poll you want to edit is", required = True, type = dChan),
+                    discord.Option(name = "message_id", description = "The ID of the message of the poll", required = True),
+                    discord.Option(name = "change", description = "What you want to change", required = True, choices = [
+                        discord.OptionChoice(name = "title", value = "title"),
+                        discord.OptionChoice(name = "description", value = "description"),
+                        discord.OptionChoice(name = "timestamp", value = "timestamp"),
+                        discord.OptionChoice(name = "attachment", value = "attachment")
+                    ]),
+                    discord.Option(name = "new_value", description = "The new value (image link for attachment)", required = True) ])
+async def edit_poll(inter, channel, message_id, change, new_value):
+    if bot.get_guild(guild_id).get_role(mod_role_id) not in inter.author.roles:
+        await inter.send("You do not have the permission to do that !", ephemeral = True)
+        return
+    try:
+        message = await channel.fetch_message(message_id)
+    except:
+        await inter.send("Message not found.", ephemeral = True)
+        return
+    if message.author != bot.user:
+        await inter.send("This is not a poll.", ephemeral = True)
+        return
+    embed = message.embeds[0]
+    if change == "title": embed.title = new_value.replace("{title}", embed.title)
+    elif change == "description": embed.description = new_value.replace("{description}", embed.description).replace("\\n","\n")
+    elif change == "timestamp":
+        try: timestamp = float(new_value)
+        except ValueError:
+            await inter.send("Invalid timestamp.", ephemeral = True)
+            return
+        embed.timestamp = datetime.fromtimestamp(timestamp)
+    elif change == "attachment":
+        if not new_value.startswith("http"):
+            await inter.send("Invalid attachment url.", ephemeral = True)
+            return
+        embed.set_image(url = new_value)
+    try: await message.edit(embed = embed)
+    except:
+        await inter.send("An error occurred... Make sure that you input correct arguments.", ephemeral = True)
+        return
+    await inter.send(f"Poll edited successfully!\n\n[Link to poll](https://discord.com/channels/{guild_id}/{channel.id}/{message.id})")
 
 
 
