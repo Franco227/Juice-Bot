@@ -27,6 +27,7 @@ dInt = discord.OptionType.integer
 dRole = discord.OptionType.role
 dChan = discord.OptionType.channel
 dAttach = discord.OptionType.attachment
+dUser = discord.OptionType.user
 colors = discord.Color
 
 def dtime():
@@ -434,6 +435,21 @@ async def edit_poll(inter, channel, message_id, change, new_value):
         await inter.send("An error occurred... Make sure that you input correct arguments.", ephemeral = True)
         return
     await inter.send(f"Poll edited successfully!\n\n[Link to poll](https://discord.com/channels/{guild_id}/{channel.id}/{message.id})")
+
+
+@bot.slash_command(description = "Dm a user", options = [
+                    discord.Option(name = "user", description = "The user you want to send a message to", required = True, type = dUser),
+                    discord.Option(name = "message", description = "Your message, use \\n for new lines", required = True)
+                    ])
+async def dm(inter, user, message):
+    if bot.get_guild(guild_id).get_role(mod_role_id) not in inter.author.roles:
+        await inter.send("You do not have the permission to do that !", ephemeral = True)
+        return
+    try:
+        await user.send(message.replace('\\n', '\n'))
+        await inter.send("Message sent successfully!", ephemeral = True)
+    except:
+        await inter.send("Couldn't send the message...", ephemeral = True)
 
 
 
