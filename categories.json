@@ -193,7 +193,13 @@
             "name": "All Nametags",
             "channel": 1019932848809050172,
             "faq": "**Q:** What is the goal of this category ?\n**A:** Get all nametags easter eggs.\n> - `jeb_` (sheep)\n> - `Toast` (rabbit)\n> - `Dinnerbone` (any mob)\n> - `Grumm` (any mob)\n> - `Johnny` (vindicator)\n\n**Q:** How do I get nametags ?\n**A:** You can find them in chests (Dungeon, Mineshaft, Mansion, Ancient City), fish them (0.83%), or trade for them (20 emeralds with a Master Librarian).\n\n**Q:** SSG Seed ?\n**A:** `15061867208` (mansion), found by hyoka !",
-            "seeds": []
+            "seeds": [
+                {
+                    "name": "Mansion Seed",
+                    "seed": 15061867208,
+                    "version": "1.16.1"
+                }
+            ]
         },
         {
             "name": "Bullseye%",
