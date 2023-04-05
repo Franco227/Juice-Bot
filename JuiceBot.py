@@ -326,7 +326,8 @@ async def remove_seed(inter, seed):
 @bot.slash_command(description = "Check the probability of something idk", options = [
                     discord.Option(name = "of", description = "What to check", required = True, choices = [
                         discord.OptionChoice(name = "flint", value = "flint"),
-                        discord.OptionChoice(name = "ender_eye_breaks", value = "ender_eye_breaks")
+                        discord.OptionChoice(name = "ender_eye_breaks", value = "ender_eye_breaks"),
+                        discord.OptionChoice(name = "seed", value = "seed")
                     ]),
                     discord.Option(name = "nb", description = "The number expected", required = True,
                                     type = discord.OptionType.integer, min_value = 1),
@@ -336,9 +337,12 @@ async def odds(inter, of, nb, nb_trials):
     if of == "flint":
         msg = f"Probability of obtaining :Q: {nb} flint(s) from {nb_trials} gravel(s) mined"
         p = 0.1
-    if of == "ender_eye_breaks":
+    elif of == "ender_eye_breaks":
         msg = f"Probability of :Q: {nb} eye break(s) for {nb_trials} eye throw(s)"
         p = 0.2
+    elif of == "seed":
+        msg = f"Probability of obtaining :Q: {nb} wheat seed(s) from {nb_trials} grass broken"
+        p = 0.125
     else:
         await inter.send("Error: Item not found", ephemeral = True)
         return
