@@ -111,8 +111,14 @@ async def on_message(message):
     if message.author.bot: return
     if message.guild is None: print(f"DM from {message.author}: {message.content}")
     if message.guild is None or message.guild.id != guild_id: return
-    msg = message.content.split(' ')
-    if "virst" in msg or "virt" in msg: await message.reply("crimson*")
+
+    # BEDGE
+    if message.content in ["<:bedge:1072508860046250024>", "<:catsleep:1077225171569606748>"]:
+        await message.add_reaction("🛏️")
+    elif message.content == "<:bed:1117936940432490496>":
+        await message.add_reaction("☀️")
+    elif message.content == "🛏️":
+        await message.add_reaction("<:bedge:1072508860046250024>")
 
 
 @bot.event
