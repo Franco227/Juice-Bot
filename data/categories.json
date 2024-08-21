@@ -6,14 +6,14 @@
             "faq": "**Q:** What is this category ?\n **A:** You have to make a fishtank, check rules [here](https://discord.com/channels/936167959431364628/936173275371950090/936984778048143360)\n \n **Q:** What are the current SSG seeds ?\n **A:** All ssg seeds are listed [here](https://discord.com/channels/936167959431364628/936173275371950090/943560507699376179)\n \n **Q:** How do I build the fishtank for the silk mansion seed ?\n **A:** Here is one of the [fastest setup](https://www.youtube.com/watch?v=nEIE3jnimCY)\n \n **Q:** Practice map ?\n **A:** [Franco's Practice Map for Fishtank build for the Silk Mansion seed](https://www.mediafire.com/file/jamvlkmmh0ar614/FishTank_Practice.zip/file)",
             "seeds": [
                 {
-                    "name": "Silk Mansion",
-                    "seed": 2817479300692647315,
-                    "version": "1.16.5"
-                },
-                {
                     "name": "Structureless",
                     "seed": -1632797017466083450,
                     "version": "1.16.1"
+                },
+                {
+                    "name": "Silk Mansion",
+                    "seed": 2817479300692647315,
+                    "version": "1.16.5"
                 }
             ]
         },
