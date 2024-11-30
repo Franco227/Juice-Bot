@@ -35,3 +35,15 @@ class AdminCog(commands.Cog):
             await interaction.response.send_message(embed=success_embed(title="Message sent!", description=""), ephemeral=True)
         except Exception as e:
             await interaction.response.send_message(embed=error_embed(f"Couldn't send the message...\n`{e}`"), ephemeral=True)
+
+    @command(name="send", description="Send a message")
+    @guilds(GUILD_ID)
+    @checks.has_role(OWNER_ROLE_ID)
+    @describe(channel="The channel you want to send the message to")
+    @describe(message="Your message, use \\n for new lines")
+    async def send(self, interaction: discord.Interaction, channel: discord.TextChannel, message: str):
+        try:
+            await channel.send(message.replace('\\n', '\n'))
+            await interaction.response.send_message(embed=success_embed(title="Message sent!", description=""), ephemeral=True)
+        except Exception as e:
+            await interaction.response.send_message(embed=error_embed(f"Couldn't send the message...\n`{e}`"), ephemeral=True)
