@@ -31,7 +31,7 @@ class CategoriesCog(commands.Cog):
             file.truncate()
         LOGGER.info("Categories saved.")
 
-    def get_category(self, id: int) -> Category | None:
+    def get_category(self, id: int | None) -> Category | None:
         for category in self.categories:
             if category.id == id:
                 return category
@@ -150,11 +150,12 @@ class CategoriesCog(commands.Cog):
             return await interaction.response.send_message(embed=error_embed("This seed is not used for this category..."), ephemeral=True)
         if change == "seed":
             try:
-                new_value = int(new_value)
+                int(new_value)
             except ValueError:
                 return await interaction.response.send_message(embed=error_embed("This seed is not valid."), ephemeral=True)
         old_data = current_seed.to_json()
-        new_data = current_seed.to_json()[change] = new_value
+        new_data = current_seed.to_json()
+        new_data[change] = int(new_value) if change == "seed" else new_value
         current_seed.edit_data(new_data)
         await interaction.response.send_message(embed=success_embed(title="Seed edited!", description=f"The seed {seed} was edited successfully !\n\nOld Seed JSON:```json\n{old_data}```"))
         LOGGER.info(f"Seed {seed} for {category.name} edited by {interaction.user}.")

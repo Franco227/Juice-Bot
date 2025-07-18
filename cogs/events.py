@@ -24,7 +24,7 @@ class EventsCog(commands.Cog):
 
     @commands.Cog.listener()
     async def on_ready(self):
-        LOGGER.info(f"[v{BOT_VERSION}] Bot connected as {self.bot.user.name}.")
+        LOGGER.info(f"[v{BOT_VERSION}] Bot connected as {self.bot.user.name if self.bot.user else 'unknown bot'}.")
         while 1:
             await self.bot.change_presence(activity=discord.Game(name=get_random_status()))
             await asleep(600)

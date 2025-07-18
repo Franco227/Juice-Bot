@@ -16,7 +16,7 @@ class InformationsCog(commands.Cog):
         self.bot = bot
 
 
-    def ping_color(self, latency: int):
+    def ping_color(self, latency: float):
         ping_colors = [
             (5000, 16711680),
             (750, COLORS.red()),

@@ -36,15 +36,15 @@ class PollCog(commands.Cog):
             description: str,
             end_timestamp: int,
             number_of_reactions: Range[int, 2, 10] = 0,
-            mention: discord.Role = None,
-            attachment: discord.Attachment = None
+            mention: discord.Role | None = None,
+            attachment: discord.Attachment | None = None
         ):
         await interaction.response.send_message("Creating embed...")
         embed = default_embed(title=title, description=description.replace("\\n","\n"), timestamp=datetime.fromtimestamp(float(end_timestamp)))
         embed.set_footer(text = "Poll ends at")
         note = ""
         if attachment is not None:
-            if attachment.content_type.startswith("image"):
+            if attachment.content_type and attachment.content_type.startswith("image"):
                 embed.set_image(url = attachment.url)
             else:
                 note = "\nNote: The attachment could not be added to the poll."
@@ -78,7 +78,7 @@ class PollCog(commands.Cog):
     @describe(new_value="The new value (image link for attachment)")
     async def edit_poll(self, interaction: discord.Interaction, channel: discord.TextChannel, message_id: str, change: str, new_value: str):
         try:
-            message_id = int(message_id.split('-')[1]) if '-' in message_id else int(message_id)
+            message_id = message_id.split('-')[1] if '-' in message_id else message_id
             message = await channel.fetch_message(int(message_id))
         except Exception as e:
             return await interaction.response.send_message(embed=error_embed(f"Message not found.\n`{e}`"), ephemeral=True)

@@ -18,23 +18,23 @@ class Category():
     def edit_faq(self, faq: str):
         self.faq = faq
 
-    def get_seed(self, seed_str: str) -> Seed | None:
-        for seed in self.seeds:
-            if seed.seed == seed_str:
-                return seed
+    def get_seed(self, seed: int) -> Seed | None:
+        for seed_object in self.seeds:
+            if seed_object.seed == seed:
+                return seed_object
         return None
 
     def add_seed(self, seed_data: dict):
         self.seeds.append(Seed(seed_data))
 
-    def remove_seed(self, seed_str: str):
-        self.seeds = [seed for seed in self.seeds if seed.seed != seed_str]
+    def remove_seed(self, seed: int):
+        self.seeds = [seed_object for seed_object in self.seeds if seed_object.seed != seed]
 
-    def edit_seed(self, seed_str: str, new_data: dict):
-        seed = self.get_seed(seed_str)
-        if seed is None:
+    def edit_seed(self, seed: int, new_data: dict):
+        found_seed = self.get_seed(seed)
+        if found_seed is None:
             return
-        seed.edit_data(new_data)
+        found_seed.edit_data(new_data)
 
     def seed_sortkey(self, seed: Seed) -> list:
         sortkey = []
