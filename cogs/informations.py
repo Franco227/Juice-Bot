@@ -57,9 +57,9 @@ class InformationsCog(commands.Cog):
     @guilds(GUILD_ID)
     async def requirements(self, interaction: discord.Interaction):
         embed = default_embed(title="Requirements for a category to be added")
-        embed.add_field(name="1 - Suggest the category", value="Send the category in <#991278937101582486> with the category's name and goal", inline=False)
+        embed.add_field(name="1 - Suggest the category", value="Send the category in <#991278937101582486> with the category's name and goal.", inline=False)
         embed.add_field(name="2 - Get upvotes and runs", value="Get at least one of the following:\n> - 30 upvotes and 1 RSG run\n> - 25 upvotes and 3 RSG runs\\*\n> - 20 upvotes and 5 RSG runs\\*\n\n\\* : Each RSG run must be performed by a different runner", inline=False)
         embed.add_field(name="3 - Fill the form", value="Fill [this form](https://forms.gle/UYyHiC2LdbGWw3S2A)", inline=False)
-        embed.add_field(name="4 - Wait for a public poll", value="Mods will debate to see if the category is worth adding, and will then either make a poll or tell you no", inline=False)
-        embed.add_field(name="5 - Get enough votes", value="If the category gets enough votes, it gets added", inline=False)
+        embed.add_field(name="4 - Wait for a public poll", value="Mods will debate to see if the category is worth adding, and if it is, will make a public poll.", inline=False)
+        embed.add_field(name="5 - Get enough votes", value="If the category gets enough votes during the public poll, it will get added.", inline=False)
         await interaction.response.send_message(embed=embed)

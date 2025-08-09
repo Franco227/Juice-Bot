@@ -63,7 +63,10 @@ class CheckRunsCog(commands.Cog):
         async with ClientSession() as session:
             for request_data in self.request_data_list:
                 async with session.get(self.base_url_start + request_data[0] + self.base_url_end) as response:
-                    data: dict = await response.json()
+                    if response.status == 200:
+                        data = await response.json()
+                    else: # TODO: find bypass
+                        continue
                     runs_scanned += len(data.get("runList", []))
                     for run in data.get("runList", []):
                         run: dict

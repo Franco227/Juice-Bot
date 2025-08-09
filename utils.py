@@ -19,11 +19,11 @@ def s(list_or_count: list | int) -> str:
     if isinstance(list_or_count, int):
         return '' if list_or_count == 1 else 's'
 
-def success_embed(description: str, title: str = "Success!", timestamp: datetime = None, *args) -> Embed:
+def success_embed(description: str, title: str = "Success!", timestamp: datetime | None = None, *args) -> Embed:
     return Embed(title=title, description=description, color=COLORS.green(), timestamp=(timestamp or dtime()), *args)
 
-def error_embed(description: str, title: str = "Error", timestamp: datetime = None, *args) -> Embed:
+def error_embed(description: str, title: str = "Error", timestamp: datetime | None = None, *args) -> Embed:
     return Embed(title=title, description=description, color=COLORS.red(), timestamp=(timestamp or dtime()), *args)
 
-def default_embed(title: str, description: str = "", timestamp: datetime = None, *args) -> Embed:
+def default_embed(title: str, description: str = "", timestamp: datetime | None = None, *args) -> Embed:
     return Embed(title=title, description=description, color=COLORS.blue(), timestamp=(timestamp or dtime()), *args)
