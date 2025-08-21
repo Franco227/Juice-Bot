@@ -67,9 +67,14 @@
             "faq": "**Q:** What is this category ?\n **A:** Read the title.\n \n **Q:** I got a time of under 450ms, why did my run got retimed to 450ms ?\n **A:** The time it takes to break a beenest is 450ms, even if your timer says otherwise. The only way to do it in less than 450ms is to loot a gold axe in a ruined portal chest then break the beenest.\n \n **Q:** Is there an SSG seed with a gold axe in a ruined portal ?\n**A:** Yes! `1108912127130472088` (1.16.1), seed found by DylanDC14.\n\n**Q:** SpeedrunIGT Extension ?\n**A:** [JSON Extension](https://discord.com/channels/936167959431364628/936174026496290856/1017356525133643776) (Put it in /speedrunigt/categories/), [Mod Extension](https://github.com/RedLime/BreakBeeNestExtension/releases/latest) (Put it in mods folder). You then just have to select \"Break Beenest\" in speedrunigt category (or \"Break Bee Nest\" for the mod extension)",
             "seeds": [
                 {
-                    "name": "Ruined Portal Seed",
+                    "name": "Ruined Portal (Bee Nest)",
                     "seed": 1108912127130472088,
                     "version": "1.16.1"
+                },
+                {
+                    "name": "RP & Trial Chamber (Beehive)",
+                    "seed": 3594435459772409496,
+                    "version": "1.21.1"
                 }
             ]
         },

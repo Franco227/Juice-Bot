@@ -117,13 +117,13 @@ class CategoriesCog(commands.Cog):
     @describe(seed_name="The new seed's name")
     @describe(seed="The seed")
     @describe(seed_version="The version of Minecraft the seed should be played on")
-    async def add_seed(self, interaction: discord.Interaction, seed_name: str, seed: int, seed_version: str):
+    async def add_seed(self, interaction: discord.Interaction, seed_name: str, seed: str, seed_version: str):
         category = self.get_category(interaction.channel_id)
         if category is None:
             return await interaction.response.send_message(embed=error_embed("This channel is not linked to a category..."), ephemeral=True)
-        if category.get_seed(seed) is not None:
+        if category.get_seed(int(seed)) is not None:
             return await interaction.response.send_message(embed=error_embed("This seed already exist for this category... Maybe you wanted to do /edit_seed ?"), ephemeral=True)
-        new_seed = { "name": seed_name, "seed": seed, "version": seed_version }
+        new_seed = { "name": seed_name, "seed": int(seed), "version": seed_version }
         category.add_seed(new_seed)
         await interaction.response.send_message(embed=success_embed(title="Seed added!", description=f"The seed {seed} was added successfully !"))
         LOGGER.info(f"Seed {new_seed.get("seed", "<no assigned seed>")} added to {category.name} by {interaction.user}.")
@@ -142,11 +142,11 @@ class CategoriesCog(commands.Cog):
         Choice(name="version", value="version")
     ])
     @describe(new_value="The new value")
-    async def edit_seed(self, interaction: discord.Interaction, seed: int, change: str, new_value: str):
+    async def edit_seed(self, interaction: discord.Interaction, seed: str, change: str, new_value: str):
         category = self.get_category(interaction.channel_id)
         if category is None:
             return await interaction.response.send_message(embed=error_embed("This channel is not linked to a category..."), ephemeral=True)
-        if (current_seed := category.get_seed(seed)) is None:
+        if (current_seed := category.get_seed(int(seed))) is None:
             return await interaction.response.send_message(embed=error_embed("This seed is not used for this category..."), ephemeral=True)
         if change == "seed":
             try:
@@ -167,13 +167,13 @@ class CategoriesCog(commands.Cog):
     @guilds(GUILD_ID)
     @checks.has_any_role(MOD_ROLE_ID, OWNER_ROLE_ID)
     @describe(seed="The seed you want to remove")
-    async def remove_seed(self, interaction: discord.Interaction, seed: int):
+    async def remove_seed(self, interaction: discord.Interaction, seed: str):
         category = self.get_category(interaction.channel_id)
         if category is None:
             return await interaction.response.send_message(embed=error_embed("This channel is not linked to a category..."), ephemeral=True)
-        if (old_seed := category.get_seed(seed)) is None:
+        if (old_seed := category.get_seed(int(seed))) is None:
            return await interaction.response.send_message(embed=error_embed("This seed is not used for this category..."), ephemeral=True)
-        category.remove_seed(seed)
+        category.remove_seed(int(seed))
         await interaction.response.send_message(embed=success_embed(title="Seed deleted!", description=f"The seed {seed} was deleted succesfully !\n\nSeed JSON:```json\n{old_seed.to_json()}```"))
         LOGGER.info(f"Seed {seed} for {category.name} removed by {interaction.user}.")
         self.save_categories()
