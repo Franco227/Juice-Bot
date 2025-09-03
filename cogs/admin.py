@@ -47,3 +47,15 @@ class AdminCog(commands.Cog):
             await interaction.response.send_message(embed=success_embed(title="Message sent!", description=""), ephemeral=True)
         except Exception as e:
             await interaction.response.send_message(embed=error_embed(f"Couldn't send the message...\n`{e}`"), ephemeral=True)
+
+    @command(name="clear_messages", description="Clear the last messages")
+    @guilds(GUILD_ID)
+    @checks.has_any_role(OWNER_ROLE_ID)
+    @describe(messages="The amount of messages you want to delete")
+    @describe(reason="The reason for deletion")
+    async def clear_messages(self, interaction: discord.Interaction, messages: int, reason: str = ""):
+        try:
+            await interaction.response.send_message(embed=success_embed(title=f"Deleting {messages} messages...", description=f"Reason: {reason}" if reason else ""), ephemeral=True)
+            await interaction.channel.purge(limit=messages, reason=reason)
+        except Exception as e:
+            await interaction.response.send_message(embed=error_embed(f"Couldn't delete messages...\n`{e}`"), ephemeral=True)

@@ -46,6 +46,19 @@ class EventsCog(commands.Cog):
 
 
     @commands.Cog.listener()
+    async def on_bulk_message_delete(self, messages: list[discord.Message]):
+        if messages[0].guild is None or messages[0].guild.id != GUILD_ID:
+            return
+        embed = error_embed(title="Messages deleted", description=f"{len(messages)} messages deleted.")
+        embed.add_field(name="Channels", value=', '.join(channel.mention for channel in set(message.channel for message in messages)))
+        if all(message.author.id == messages[0].author.id for message in messages[1:]):
+            embed.set_author(name=f"{messages[0].author} ({messages[0].author.id})", icon_url=messages[0].author.avatar.url if messages[0].author.avatar else None)
+        else:
+            embed.add_field(name="Users", value=', '.join(author.mention for author in set(message.author for message in messages)), inline=False)
+        await self.bot.get_channel(LOG_CHANNEL_ID).send(embed=embed)
+
+
+    @commands.Cog.listener()
     async def on_message_delete(self, message: discord.Message):
         if message.guild is None or message.guild.id != GUILD_ID or message.channel.id == LOG_CHANNEL_ID or message.is_system():
             return
