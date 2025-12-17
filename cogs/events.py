@@ -1,4 +1,5 @@
 from asyncio import sleep as asleep
+import time
 import discord
 from discord.ext import commands
 
@@ -20,6 +21,8 @@ class EventsCog(commands.Cog):
             ("<:bed:1117936940432490496>", "☀️"),
             ("🛏️", "<:bedge:1072508860046250024>")
         ]
+        self.deleted_messages = []
+        self.next_deleted_message_log_time = 0
 
 
     @commands.Cog.listener()
@@ -49,20 +52,36 @@ class EventsCog(commands.Cog):
     async def on_bulk_message_delete(self, messages: list[discord.Message]):
         if messages[0].guild is None or messages[0].guild.id != GUILD_ID:
             return
-        embed = error_embed(title="Messages deleted", description=f"{len(messages)} messages deleted.")
-        embed.add_field(name="Channels", value=', '.join(channel.mention for channel in set(message.channel for message in messages)))
-        if all(message.author.id == messages[0].author.id for message in messages[1:]):
-            embed.set_author(name=f"{messages[0].author} ({messages[0].author.id})", icon_url=messages[0].author.avatar.url if messages[0].author.avatar else None)
-        else:
-            embed.add_field(name="Users", value=', '.join(author.mention for author in set(message.author for message in messages)), inline=False)
-        await self.bot.get_channel(LOG_CHANNEL_ID).send(embed=embed)
+        await self.send_multiple_deleted_messages_log(messages)
 
 
     @commands.Cog.listener()
     async def on_message_delete(self, message: discord.Message):
         if message.guild is None or message.guild.id != GUILD_ID or message.channel.id == LOG_CHANNEL_ID or message.is_system():
             return
+        current_timestamp = time.time()
+        self.next_deleted_message_log_time = current_timestamp
+        self.deleted_messages.append(message)
+        await asleep(5)
+        if self.next_deleted_message_log_time == current_timestamp:
+            if len(self.deleted_messages) == 1:
+                await self.send_deleted_message_log(self.deleted_messages[0])
+            else:
+                await self.send_multiple_deleted_messages_log(self.deleted_messages)
+            self.deleted_messages = []
+
+
+    async def send_deleted_message_log(self, message: discord.Message):
         embed = error_embed(title="Message deleted", description=message.content)
         embed.set_author(name=f"{message.author} ({message.author.id})", icon_url=message.author.avatar.url if message.author.avatar else None)
         embed.add_field(name="Channel", value=f"<#{message.channel.id}>")
+        await self.bot.get_channel(LOG_CHANNEL_ID).send(embed=embed)
+
+    async def send_multiple_deleted_messages_log(self, messages: list[discord.Message]):
+        embed = error_embed(title="Messages deleted", description=f"{len(messages)} messages deleted.")
+        embed.add_field(name="Channels", value=', '.join(channel.mention for channel in set(message.channel for message in messages)))
+        if all(message.author.id == messages[0].author.id for message in messages[1:]):
+            embed.set_author(name=f"{messages[0].author} ({messages[0].author.id})", icon_url=messages[0].author.avatar.url if messages[0].author.avatar else None)
+        else:
+            embed.add_field(name="Users", value=', '.join(author.mention for author in set(message.author for message in messages)), inline=False)
         await self.bot.get_channel(LOG_CHANNEL_ID).send(embed=embed)
