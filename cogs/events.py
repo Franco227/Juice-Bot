@@ -3,7 +3,7 @@ import time
 import discord
 from discord.ext import commands
 
-from constants import BOT_VERSION, GUILD_ID, LOG_CHANNEL_ID, LOGGER
+from constants import BOT_VERSION, GUILD_ID, LOG_CHANNEL_ID, LOGGER, SUS_ROLE_ID
 from utils import error_embed, get_random_status
 
 
@@ -33,6 +33,13 @@ class EventsCog(commands.Cog):
             await asleep(600)
 
 
+    async def delete_and_remove_access(self, message: discord.Message, source: str):
+        LOGGER.warning(f"[{source}] Detected potential spam message from user {message.author}, deleting and removing the user's access. Message: {message.content or 'None'}")
+        sus_role = message.guild.get_role(SUS_ROLE_ID)
+        if sus_role:
+            await message.author.add_roles(sus_role)
+        await message.delete()
+
     @commands.Cog.listener()
     async def on_message(self, message: discord.Message):
         if message.author.bot:
@@ -46,6 +53,17 @@ class EventsCog(commands.Cog):
         for trigger, reaction in self.reactions:
             if message.content == trigger:
                 await message.add_reaction(reaction)
+
+        # Spambot prevention
+        if len(message.attachments) == 4 and all(attachment.content_type == "image/jpeg" for attachment in message.attachments):
+            if all(attachment.filename.startswith("IMG_") for attachment in message.attachments):
+                await self.delete_and_remove_access(message, "IMG_")
+            if all(int(attachment.filename.split('.')[0]) == i + 1 for i, attachment in enumerate(message.attachments)):
+                await self.delete_and_remove_access(message, "1234")
+        if message.content.count('|') >= 100:
+            await self.delete_and_remove_access(message, "spoilers")
+        if message.content.count("imgur") == 4:
+            await self.delete_and_remove_access(message, "imgur")
 
 
     @commands.Cog.listener()
@@ -74,6 +92,8 @@ class EventsCog(commands.Cog):
     async def send_deleted_message_log(self, message: discord.Message):
         embed = error_embed(title="Message deleted", description=message.content)
         embed.set_author(name=f"{message.author} ({message.author.id})", icon_url=message.author.avatar.url if message.author.avatar else None)
+        if len(message.attachments) != 0:
+            embed.add_field(name="Attachments", value=', '.join(attachment.filename for attachment in message.attachments), inline=False)
         embed.add_field(name="Channel", value=f"<#{message.channel.id}>")
         await self.bot.get_channel(LOG_CHANNEL_ID).send(embed=embed)
 
@@ -85,3 +105,6 @@ class EventsCog(commands.Cog):
         else:
             embed.add_field(name="Users", value=', '.join(author.mention for author in set(message.author for message in messages)), inline=False)
         await self.bot.get_channel(LOG_CHANNEL_ID).send(embed=embed)
+
+
+    # TODO: add bot detection from reactions
