@@ -34,7 +34,9 @@ class EventsCog(commands.Cog):
 
 
     async def delete_and_remove_access(self, message: discord.Message, source: str):
-        LOGGER.warning(f"[{source}] Detected potential spam message from user {message.author}, deleting and removing the user's access. Message: {message.content or 'None'}")
+        message_content = f"Message: {message.content or 'None'}"
+        filenames = f"Filenames: {', '.join(attachment.filename for attachment in message.attachments) if len(message.attachments) else 'None'}"
+        LOGGER.warning(f"[{source}] Detected potential spam message from user {message.author}, deleting and removing the user's access. {message_content}; {filenames}")
         sus_role = message.guild.get_role(SUS_ROLE_ID)
         if sus_role:
             await message.author.add_roles(sus_role)
@@ -56,10 +58,11 @@ class EventsCog(commands.Cog):
 
         # Spambot prevention
         if len(message.attachments) == 4 and all(attachment.content_type == "image/jpeg" for attachment in message.attachments):
-            if all(attachment.filename.startswith("IMG_") for attachment in message.attachments):
-                await self.delete_and_remove_access(message, "IMG_")
-            if all(attachment.filename.split('.')[0] == str(i + 1) for i, attachment in enumerate(message.attachments)):
-                await self.delete_and_remove_access(message, "1234")
+            await self.delete_and_remove_access(message, "4jpg")
+            # if all(attachment.filename.startswith("IMG_") for attachment in message.attachments):
+            #     await self.delete_and_remove_access(message, "IMG_")
+            # if all(attachment.filename.split('.')[0] == str(i + 1) for i, attachment in enumerate(message.attachments)):
+            #     await self.delete_and_remove_access(message, "1234")
         if message.content.count('|') >= 100:
             await self.delete_and_remove_access(message, "spoilers")
         if message.content.count("imgur") == 4:
