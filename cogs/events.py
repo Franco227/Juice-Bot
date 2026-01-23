@@ -58,7 +58,7 @@ class EventsCog(commands.Cog):
         if len(message.attachments) == 4 and all(attachment.content_type == "image/jpeg" for attachment in message.attachments):
             if all(attachment.filename.startswith("IMG_") for attachment in message.attachments):
                 await self.delete_and_remove_access(message, "IMG_")
-            if all(int(attachment.filename.split('.')[0]) == i + 1 for i, attachment in enumerate(message.attachments)):
+            if all(attachment.filename.split('.')[0] == str(i + 1) for i, attachment in enumerate(message.attachments)):
                 await self.delete_and_remove_access(message, "1234")
         if message.content.count('|') >= 100:
             await self.delete_and_remove_access(message, "spoilers")
