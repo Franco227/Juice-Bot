@@ -67,6 +67,8 @@ class EventsCog(commands.Cog):
             await self.delete_and_remove_access(message, "spoilers")
         if message.content.count("imgur") == 4:
             await self.delete_and_remove_access(message, "imgur")
+        if "discord.gg/" in message.content and (len(message.role_mentions) != 0 or "@everyone" in message.content or "@here" in message.content):
+            await self.delete_and_remove_access(message, "role_mentions")
 
 
     @commands.Cog.listener()
