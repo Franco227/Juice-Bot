@@ -3,7 +3,7 @@ import time
 import discord
 from discord.ext import commands
 
-from constants import BOT_VERSION, GUILD_ID, LOG_CHANNEL_ID, LOGGER, SUS_ROLE_ID
+from constants import BOT_VERSION, GUILD_ID, HONEYPOT_CHANNEL_ID, LOG_CHANNEL_ID, LOGGER, SUS_ROLE_ID
 from utils import error_embed, get_random_status
 
 
@@ -36,7 +36,7 @@ class EventsCog(commands.Cog):
     async def delete_and_remove_access(self, message: discord.Message, source: str):
         message_content = f"Message: {message.content or 'None'}"
         filenames = f"Filenames: {', '.join(attachment.filename for attachment in message.attachments) if len(message.attachments) else 'None'}"
-        LOGGER.warning(f"[{source}] Detected potential spam message from user {message.author}, deleting and removing the user's access. {message_content}; {filenames}")
+        LOGGER.warning(f"[{source}] Detected potential spam message from user {message.author} ({message.author.id}), deleting and removing the user's access. {message_content}; {filenames}")
         sus_role = message.guild.get_role(SUS_ROLE_ID)
         if sus_role:
             await message.author.add_roles(sus_role)
@@ -57,20 +57,22 @@ class EventsCog(commands.Cog):
                 await message.add_reaction(reaction)
 
         # Spambot prevention
+        if message.channel.id == HONEYPOT_CHANNEL_ID:
+            return await self.delete_and_remove_access(message, "honeypot")
         attachments_nb = len(message.attachments)
         has_mentions = len(message.role_mentions) > 0 or "@everyone" in message.content or "@here" in message.content
         is_all_jpg = all(attachment.content_type == "image/jpeg" for attachment in message.attachments)
         if is_all_jpg:
             if attachments_nb == 4:
-                await self.delete_and_remove_access(message, "4jpg")
+                return await self.delete_and_remove_access(message, "4jpg")
             if attachments_nb == 2 and has_mentions:
-                await self.delete_and_remove_access(message, "2jpg+role_mentions")
+                return await self.delete_and_remove_access(message, "2jpg+role_mentions")
         if message.content.count('|') >= 100:
-            await self.delete_and_remove_access(message, "spoilers")
+            return await self.delete_and_remove_access(message, "spoilers")
         if message.content.count("imgur") == 4:
-            await self.delete_and_remove_access(message, "4imgur")
+            return await self.delete_and_remove_access(message, "4imgur")
         if "discord.gg/" in message.content and has_mentions:
-            await self.delete_and_remove_access(message, "dgg+role_mentions")
+            return await self.delete_and_remove_access(message, "dgg+role_mentions")
 
 
     @commands.Cog.listener()
