@@ -21,6 +21,7 @@ class JuiceBot(commands.Bot):
         ]
 
     async def setup_hook(self):
+        LOGGER.info("Loading cogs...")
         for extension in self.initial_extensions:
             await self.load_extension(extension)
             LOGGER.info(f"Loaded {extension}")

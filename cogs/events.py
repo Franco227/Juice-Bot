@@ -57,8 +57,6 @@ class EventsCog(commands.Cog):
                 await message.add_reaction(reaction)
 
         # Spambot prevention
-        if message.channel.id == HONEYPOT_CHANNEL_ID:
-            return await self.delete_and_remove_access(message, "honeypot")
         attachments_nb = len(message.attachments)
         has_mentions = len(message.role_mentions) > 0 or "@everyone" in message.content or "@here" in message.content
         is_all_jpg = all(attachment.content_type == "image/jpeg" for attachment in message.attachments)
@@ -73,6 +71,8 @@ class EventsCog(commands.Cog):
             return await self.delete_and_remove_access(message, "4imgur")
         if "discord.gg/" in message.content and has_mentions:
             return await self.delete_and_remove_access(message, "dgg+role_mentions")
+        if message.channel.id == HONEYPOT_CHANNEL_ID:
+            return await self.delete_and_remove_access(message, "honeypot")
 
 
     @commands.Cog.listener()
