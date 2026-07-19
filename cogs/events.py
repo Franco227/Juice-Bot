@@ -58,8 +58,8 @@ class EventsCog(commands.Cog):
 
         # Spambot prevention
         has_mentions = len(message.role_mentions) > 0 or "@everyone" in message.content or "@here" in message.content
-        is_all_jpg = all(attachment.content_type == "image/jpeg" for attachment in message.attachments)
-        if is_all_jpg:
+        is_all_jpg = len(message.attachments) > 0 and all(attachment.content_type == "image/jpeg" for attachment in message.attachments)
+        if has_mentions and is_all_jpg:
             return await self.delete_and_remove_access(message, "jpg+role_mentions")
         if message.content.count('|') >= 100:
             return await self.delete_and_remove_access(message, "spoilers")
