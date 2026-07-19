@@ -106,8 +106,13 @@ class EventsCog(commands.Cog):
         await self.bot.get_channel(LOG_CHANNEL_ID).send(embed=embed)
 
     async def send_multiple_deleted_messages_log(self, messages: list[discord.Message]):
-        content = messages[0].content if all(message.content == messages[0].content for message in messages[1:]) else ""
-        embed = error_embed(title="Messages deleted", description=f"{len(messages)} messages deleted.\nContent: ```{content}```")
+        if all(message.content == messages[0].content for message in messages[1:]):
+            content_section = f"Content: ```{messages[0].content}```"
+        elif len(messages) > 7:
+            content_section = ""
+        else:
+            content_section = "Content: " + ''.join(f"```{message.content}```" for message in messages)
+        embed = error_embed(title="Messages deleted", description=f"{len(messages)} messages deleted.\n{content_section}")
         embed.add_field(name="Channels", value=', '.join(channel.mention for channel in set(message.channel for message in messages)))
         if all(message.author.id == messages[0].author.id for message in messages[1:]):
             embed.set_author(name=f"{messages[0].author} ({messages[0].author.id})", icon_url=messages[0].author.avatar.url if messages[0].author.avatar else None)
