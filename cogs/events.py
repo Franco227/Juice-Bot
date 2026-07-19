@@ -57,14 +57,10 @@ class EventsCog(commands.Cog):
                 await message.add_reaction(reaction)
 
         # Spambot prevention
-        attachments_nb = len(message.attachments)
         has_mentions = len(message.role_mentions) > 0 or "@everyone" in message.content or "@here" in message.content
         is_all_jpg = all(attachment.content_type == "image/jpeg" for attachment in message.attachments)
         if is_all_jpg:
-            if attachments_nb == 4:
-                return await self.delete_and_remove_access(message, "4jpg")
-            if attachments_nb == 2 and has_mentions:
-                return await self.delete_and_remove_access(message, "2jpg+role_mentions")
+            return await self.delete_and_remove_access(message, "jpg+role_mentions")
         if message.content.count('|') >= 100:
             return await self.delete_and_remove_access(message, "spoilers")
         if message.content.count("imgur") == 4:
