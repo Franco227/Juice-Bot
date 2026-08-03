@@ -121,7 +121,7 @@ class EventsCog(commands.Cog):
         elif len(messages) > 7:
             content_section = ""
         else:
-            content_section = "Content: " + ''.join(f"```{message.content}```" for message in messages)
+            content_section = "Content: " + ''.join(f"```{message.content}```" for message in sorted(messages, key=lambda message: message.created_at))
         embed = error_embed(title="Messages deleted", description=f"{len(messages)} messages deleted.\n{content_section}")
         embed.add_field(name="Channels", value=', '.join(channel.mention for channel in {message.channel for message in messages}))
         if all(message.author.id == messages[0].author.id for message in messages[1:]):
