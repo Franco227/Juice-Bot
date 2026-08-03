@@ -1,5 +1,5 @@
 import discord
-from discord.app_commands import command, describe, guilds, checks
+from discord.app_commands import checks, command, describe, guilds
 from discord.ext import commands
 
 from constants import GUILD_ID, OWNER_ROLE_ID

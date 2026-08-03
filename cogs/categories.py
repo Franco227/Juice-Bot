@@ -1,7 +1,8 @@
-import discord
-from discord.app_commands import choices, command, describe, guilds, checks, Choice
-from discord.ext import commands
 import json
+
+import discord
+from discord.app_commands import Choice, checks, choices, command, describe, guilds
+from discord.ext import commands
 
 from classes.Category import Category
 from constants import GUILD_ID, LOGGER, MOD_ROLE_ID, OWNER_ROLE_ID

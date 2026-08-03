@@ -1,10 +1,12 @@
+from time import monotonic
+
 import discord
 from discord.app_commands import command, guilds
 from discord.ext import commands
-from time import monotonic
 
 from constants import BOT_VERSION, COLORS, GUILD_ID
 from utils import default_embed
+
 
 async def setup(bot: commands.Bot):
     await bot.add_cog(InformationsCog(bot))

@@ -1,7 +1,7 @@
 import discord
+from aiohttp.client_exceptions import ClientConnectorError
 from discord.app_commands import AppCommandError, errors
 from discord.ext import commands
-from aiohttp.client_exceptions import ClientConnectorError
 
 from constants import BOT_INTENTS, BOT_PREFIX, BOT_TOKEN, GUILD_ID, LOGGER
 from utils import error_embed
@@ -34,7 +34,7 @@ bot = JuiceBot()
 
 @bot.tree.error
 async def on_tree_error(interaction: discord.Interaction, error: AppCommandError):
-    if isinstance(error, errors.MissingRole) or isinstance(error, errors.MissingAnyRole):
+    if isinstance(error, (errors.MissingRole, errors.MissingAnyRole)):
         LOGGER.error(f"[MissingRoleException] User {interaction.user} ({interaction.user.id}) attempted command {interaction.command.name if interaction.command else 'unknown command'}.")
         return await interaction.response.send_message(embed=error_embed("You do not have the required permissions for this command."), ephemeral=True)
     if (command := interaction.command) is not None:

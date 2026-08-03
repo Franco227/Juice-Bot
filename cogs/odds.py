@@ -1,5 +1,5 @@
 import discord
-from discord.app_commands import command, describe, choices, guilds, Choice, Range
+from discord.app_commands import Choice, Range, choices, command, describe, guilds
 from discord.ext import commands
 from scipy.stats import binom
 
@@ -40,6 +40,7 @@ class OddsCog(commands.Cog):
     @describe(nb="The number expected")
     @describe(trials="The number of attempts")
     async def odds(self, interaction: discord.Interaction, of: str, nb: Range[int, 0], trials: Range[int, 1]):
+        description, p, factor = "Something went wrong", 0, 0
         for odd_type, odd_p, odd_description, odd_factor in self.odds_list:
             if of == odd_type:
                 description, p, factor = odd_description, odd_p, odd_factor
