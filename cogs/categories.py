@@ -67,10 +67,10 @@ class CategoriesCog(commands.Cog):
         old_category = category.to_json()
         old_category_name = old_category.get("name", "Nameless Category")
         self.categories.remove(category)
+        self.save_categories()
         await interaction.user.send(embed=success_embed(title="Category deleted!", description=f"The category {old_category_name} for the channel <#{interaction.channel_id}> has been successfully deleted!\n\nCategory JSON:```json\n{old_category}```"))
         await interaction.response.send_message(embed=success_embed(title="Category deleted!", description=f"The category {old_category_name} for the current channel has been successfully deleted!"))
         LOGGER.info(f"Category {old_category_name} deleted by {interaction.user}.")
-        self.save_categories()
 
 
 
@@ -93,10 +93,10 @@ class CategoriesCog(commands.Cog):
             return await interaction.response.send_message(embed=error_embed("This channel isn't linked to a category... Maybe you wanted to do /new_category ?"), ephemeral=True)
         old_faq = category.faq
         category.edit_faq(text)
+        self.save_categories()
         await interaction.user.send(embed=success_embed(title="FAQ updated!", description=f"The FAQ for the channel <#{interaction.channel_id}> has been successfully updated!\n\nOld FAQ:```{old_faq}```"))
         await interaction.response.send_message(embed=success_embed(title="FAQ updated!", description="The FAQ for the current channel has been successfully updated!"))
         LOGGER.info(f"FAQ of {category.name} edited by {interaction.user}.")
-        self.save_categories()
 
 
 
