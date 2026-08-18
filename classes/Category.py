@@ -1,5 +1,6 @@
 from classes.Seed import Seed
 
+
 class Category():
 
     def __init__(self, data: dict):
@@ -18,7 +19,7 @@ class Category():
     def edit_faq(self, faq: str):
         self.faq = faq
 
-    def get_seed(self, seed: int) -> Seed | None:
+    def get_seed(self, seed: str) -> Seed | None:
         for seed_object in self.seeds:
             if seed_object.seed == seed:
                 return seed_object
@@ -27,10 +28,10 @@ class Category():
     def add_seed(self, seed_data: dict):
         self.seeds.append(Seed(seed_data))
 
-    def remove_seed(self, seed: int):
+    def remove_seed(self, seed: str):
         self.seeds = [seed_object for seed_object in self.seeds if seed_object.seed != seed]
 
-    def edit_seed(self, seed: int, new_data: dict):
+    def edit_seed(self, seed: str, new_data: dict):
         found_seed = self.get_seed(seed)
         if found_seed is None:
             return
@@ -40,7 +41,9 @@ class Category():
         sortkey = []
         version = seed.version.split('-')[0].split('.')
         sortkey.extend(list(map(int, version[:2])))
-        if len(version) == 2 or version[2].lower() == 'x':
+        if len(version) == 1 or version[1] == "x":
+            sortkey.extend([0, 0])
+        elif len(version) == 2 or version[2].lower() == 'x':
             sortkey.append(0)
         else:
             sortkey.append(int(version[2]))

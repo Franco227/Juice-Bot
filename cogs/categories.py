@@ -122,14 +122,14 @@ class CategoriesCog(commands.Cog):
         category = self.get_category(interaction.channel_id)
         if category is None:
             return await interaction.response.send_message(embed=error_embed("This channel is not linked to a category..."), ephemeral=True)
-        if category.get_seed(int(seed)) is not None:
+        if category.get_seed(seed) is not None:
             return await interaction.response.send_message(embed=error_embed("This seed already exist for this category... Maybe you wanted to do /edit_seed ?"), ephemeral=True)
-        new_seed = { "name": seed_name, "seed": int(seed), "version": seed_version }
+        new_seed = { "name": seed_name, "seed": seed, "version": seed_version }
         category.add_seed(new_seed)
-        await interaction.response.send_message(embed=success_embed(title="Seed added!", description=f"The seed {seed} was added successfully !"))
-        LOGGER.info(f"Seed {new_seed.get("seed", "<no assigned seed>")} added to {category.name} by {interaction.user}.")
         category.sort_seeds()
         self.save_categories()
+        LOGGER.info(f"Seed {new_seed.get("seed", "<no assigned seed>")} added to {category.name} by {interaction.user}.")
+        await interaction.response.send_message(embed=success_embed(title="Seed added!", description=f"The seed {seed} was added successfully !"))
 
 
     @command(name="edit_seed", description="Edit a seed for the current channel's category")
@@ -147,21 +147,16 @@ class CategoriesCog(commands.Cog):
         category = self.get_category(interaction.channel_id)
         if category is None:
             return await interaction.response.send_message(embed=error_embed("This channel is not linked to a category..."), ephemeral=True)
-        if (current_seed := category.get_seed(int(seed))) is None:
+        if (current_seed := category.get_seed(seed)) is None:
             return await interaction.response.send_message(embed=error_embed("This seed is not used for this category..."), ephemeral=True)
-        if change == "seed":
-            try:
-                int(new_value)
-            except ValueError:
-                return await interaction.response.send_message(embed=error_embed("This seed is not valid."), ephemeral=True)
         old_data = current_seed.to_json()
         new_data = current_seed.to_json()
-        new_data[change] = int(new_value) if change == "seed" else new_value
+        new_data[change] = new_value
         current_seed.edit_data(new_data)
-        await interaction.response.send_message(embed=success_embed(title="Seed edited!", description=f"The seed {seed} was edited successfully !\n\nOld Seed JSON:```json\n{old_data}```"))
-        LOGGER.info(f"Seed {seed} for {category.name} edited by {interaction.user}.")
         category.sort_seeds()
         self.save_categories()
+        LOGGER.info(f"Seed {seed} for {category.name} edited by {interaction.user}.")
+        await interaction.response.send_message(embed=success_embed(title="Seed edited!", description=f"The seed {seed} was edited successfully !\n\nOld Seed JSON:```json\n{old_data}```"))
 
 
     @command(name="remove_seed", description="Remove a seed from the current channel's category")
@@ -172,9 +167,9 @@ class CategoriesCog(commands.Cog):
         category = self.get_category(interaction.channel_id)
         if category is None:
             return await interaction.response.send_message(embed=error_embed("This channel is not linked to a category..."), ephemeral=True)
-        if (old_seed := category.get_seed(int(seed))) is None:
+        if (old_seed := category.get_seed(seed)) is None:
            return await interaction.response.send_message(embed=error_embed("This seed is not used for this category..."), ephemeral=True)
-        category.remove_seed(int(seed))
-        await interaction.response.send_message(embed=success_embed(title="Seed deleted!", description=f"The seed {seed} was deleted succesfully !\n\nSeed JSON:```json\n{old_seed.to_json()}```"))
-        LOGGER.info(f"Seed {seed} for {category.name} removed by {interaction.user}.")
+        category.remove_seed(seed)
         self.save_categories()
+        LOGGER.info(f"Seed {seed} for {category.name} removed by {interaction.user}.")
+        await interaction.response.send_message(embed=success_embed(title="Seed deleted!", description=f"The seed {seed} was deleted succesfully !\n\nSeed JSON:```json\n{old_seed.to_json()}```"))
