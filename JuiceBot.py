@@ -40,6 +40,10 @@ class JuiceBot(commands.Bot):
     async def status_loop(self):
         await self.change_presence(activity=discord.Game(name=get_random_status()))
 
+    @status_loop.before_loop
+    async def before_status_loop(self):
+        await self.wait_until_ready()
+
     async def send_log(self, embed: discord.Embed):
         log_channel = self.get_channel(LOG_CHANNEL_ID)
         if type(log_channel) is not discord.TextChannel:

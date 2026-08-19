@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import UTC, datetime
 
 import discord
 from discord.app_commands import (
@@ -50,7 +50,7 @@ class PollCog(commands.Cog):
             attachment: discord.Attachment | None = None
         ):
         await interaction.response.send_message("Creating embed...")
-        embed = default_embed(title=title, description=description.replace('\\n','\n'), timestamp=datetime.fromtimestamp(float(end_timestamp)))
+        embed = default_embed(title=title, description=description.replace('\\n','\n'), timestamp=datetime.fromtimestamp(float(end_timestamp), UTC))
         embed.set_footer(text = "Poll ends at")
         note = ""
         if attachment is not None:
@@ -70,7 +70,7 @@ class PollCog(commands.Cog):
         else:
             for i in range(number_of_reactions):
                 await message.add_reaction(self.number_reactions[i])
-        await interaction.edit_original_response(content="", embed=success_embed(title="Poll sent out successfully!", description=f"https://discord.com/channels/{GUILD_ID}/{channel.id}/{message.id} \n{note}"))
+        await interaction.edit_original_response(content="", embed=success_embed(title="Poll sent out successfully!", description=f"{message.jump_url}\n{note}"))
 
 
     @command(name="edit_poll", description="Edit an existing poll")
@@ -106,7 +106,7 @@ class PollCog(commands.Cog):
                 timestamp = float(new_value)
             except ValueError:
                 return await interaction.response.send_message(embed=error_embed("Invalid timestamp."), ephemeral=True)
-            embed.timestamp = datetime.fromtimestamp(timestamp)
+            embed.timestamp = datetime.fromtimestamp(timestamp, UTC)
         elif change == "attachment":
             if not new_value.startswith("http"):
                 return await interaction.response.send_message(embed=error_embed("Invalid attachment url."), ephemeral=True)
@@ -115,4 +115,4 @@ class PollCog(commands.Cog):
             await message.edit(embed=embed)
         except (discord.Forbidden, discord.HTTPException) as e:
             return await interaction.response.send_message(embed=error_embed(f"An error occurred... Make sure that you input correct arguments.\n`{e}`"), ephemeral=True)
-        await interaction.response.send_message(embed=success_embed(title="Poll edited successfully!", description=f"\n\nhttps://discord.com/channels/{GUILD_ID}/{channel.id}/{message.id}"))
+        await interaction.response.send_message(embed=success_embed(title="Poll edited successfully!", description=f"{message.jump_url}"))
