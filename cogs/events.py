@@ -12,16 +12,17 @@ from constants import (
     LOGGER,
     SUS_ROLE_ID,
 )
+from JuiceBot import JuiceBot
 from utils import error_embed, get_random_status
 
 
-async def setup(bot: commands.Bot):
+async def setup(bot: JuiceBot):
     await bot.add_cog(EventsCog(bot))
 
 
 class EventsCog(commands.Cog):
 
-    def __init__(self, bot: commands.Bot):
+    def __init__(self, bot: JuiceBot):
         self.bot = bot
         self.reactions = [
             ("<:bedge:1072508860046250024>", "🛏️"),
@@ -113,7 +114,7 @@ class EventsCog(commands.Cog):
         if len(message.attachments) != 0:
             embed.add_field(name="Attachments", value=', '.join(attachment.filename for attachment in message.attachments), inline=False)
         embed.add_field(name="Channel", value=f"<#{message.channel.id}>")
-        await self.bot.get_channel(LOG_CHANNEL_ID).send(embed=embed)
+        await self.bot.send_log(embed=embed)
 
     async def send_multiple_deleted_messages_log(self, messages: list[discord.Message]):
         if all(message.content == messages[0].content for message in messages[1:]):
@@ -128,7 +129,7 @@ class EventsCog(commands.Cog):
             embed.set_author(name=f"{messages[0].author} ({messages[0].author.id})", icon_url=messages[0].author.avatar.url if messages[0].author.avatar else None)
         else:
             embed.add_field(name="Users", value=', '.join(author.mention for author in {message.author for message in messages}), inline=False)
-        await self.bot.get_channel(LOG_CHANNEL_ID).send(embed=embed)
+        await self.bot.send_log(embed=embed)
 
 
     # TODO: add bot detection from reactions

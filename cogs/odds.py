@@ -4,16 +4,17 @@ from discord.ext import commands
 from scipy.stats import binom
 
 from constants import GUILD_ID
+from JuiceBot import JuiceBot
 from utils import default_embed, error_embed, s
 
 
-async def setup(bot: commands.Bot):
+async def setup(bot: JuiceBot):
     await bot.add_cog(OddsCog(bot))
 
 
 class OddsCog(commands.Cog):
 
-    def __init__(self, bot: commands.Bot):
+    def __init__(self, bot: JuiceBot):
         self.bot = bot
         self.odds_list = [
             ("flint", 0.1, "Probability of obtaining {quantifier} {nb} flint{s_nb} from {trials} gravel{s_trials} mined", 1),

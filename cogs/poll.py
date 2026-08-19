@@ -13,16 +13,17 @@ from discord.app_commands import (
 from discord.ext import commands
 
 from constants import GUILD_ID, MOD_ROLE_ID, OWNER_ROLE_ID
+from JuiceBot import JuiceBot
 from utils import default_embed, error_embed, success_embed
 
 
-async def setup(bot: commands.Bot):
+async def setup(bot: JuiceBot):
     await bot.add_cog(PollCog(bot))
 
 
 class PollCog(commands.Cog):
 
-    def __init__(self, bot: commands.Bot):
+    def __init__(self, bot: JuiceBot):
         self.bot = bot
         self.number_reactions = ["1️⃣", "2️⃣", "3️⃣", "4️⃣", "5️⃣", "6️⃣", "7️⃣", "8️⃣", "9️⃣", "🔟"]
 

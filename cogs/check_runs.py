@@ -6,16 +6,17 @@ from discord.app_commands import checks, command, guilds
 from discord.ext import commands
 
 from constants import COLORS, GUILD_ID, MOD_ROLE_ID, OWNER_ROLE_ID
+from JuiceBot import JuiceBot
 from utils import dtime, s
 
 
-async def setup(bot: commands.Bot):
+async def setup(bot: JuiceBot):
     await bot.add_cog(CheckRunsCog(bot))
 
 
 class CheckRunsCog(commands.Cog):
 
-    def __init__(self, bot: commands.Bot):
+    def __init__(self, bot: JuiceBot):
         self.bot = bot
         self.seed_regex = r"-?\d{14,}"
         self.base_url_start = "https://www.speedrun.com/api/v2/GetGameLeaderboard2?_r=eyJwYXJhbXMiOnsiZ2FtZUlkIjoibTFtbmpleGQiLCJjYXRlZ29yeUlkIjoi"

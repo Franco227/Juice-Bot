@@ -6,16 +6,17 @@ from discord.ext import commands
 
 from classes.Category import Category
 from constants import GUILD_ID, LOGGER, MOD_ROLE_ID, OWNER_ROLE_ID
+from JuiceBot import JuiceBot
 from utils import error_embed, s, success_embed
 
 
-async def setup(bot: commands.Bot):
+async def setup(bot: JuiceBot):
     await bot.add_cog(CategoriesCog(bot))
 
 
 class CategoriesCog(commands.Cog):
 
-    def __init__(self, bot: commands.Bot):
+    def __init__(self, bot: JuiceBot):
         self.bot = bot
         self.categories = self.load_categories()
 

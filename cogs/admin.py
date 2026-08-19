@@ -2,17 +2,18 @@ import discord
 from discord.app_commands import checks, command, describe, guilds
 from discord.ext import commands
 
-from constants import GUILD_ID, LOG_CHANNEL_ID, LOGGER, OWNER_ROLE_ID
+from constants import GUILD_ID, LOGGER, OWNER_ROLE_ID
+from JuiceBot import JuiceBot
 from utils import default_embed, error_embed, get_random_status, success_embed
 
 
-async def setup(bot: commands.Bot):
+async def setup(bot: JuiceBot):
     await bot.add_cog(AdminCog(bot))
 
 
 class AdminCog(commands.Cog):
 
-    def __init__(self, bot: commands.Bot):
+    def __init__(self, bot: JuiceBot):
         self.bot = bot
 
 
@@ -61,6 +62,6 @@ class AdminCog(commands.Cog):
             await interaction.channel.purge(limit=messages, reason=reason)
             LOGGER.info(f"{messages} purged in {interaction.channel.name} ({interaction.channel_id}) by {interaction.user.name} ({interaction.user.id}).")
             await interaction.edit_original_response(embed=success_embed(title=f"Deleted {messages} messages.", description=f"Reason: {reason}" if reason else ""))
-            await self.bot.get_channel(LOG_CHANNEL_ID).send(embed=success_embed(title=f"{messages} purged", description=f"{messages} were purged in {interaction.channel.mention} by {interaction.user.mention}."))
+            await self.bot.send_log(embed=success_embed(title=f"{messages} purged", description=f"{messages} were purged in {interaction.channel.mention} by {interaction.user.mention}."))
         except (discord.Forbidden, discord.HTTPException) as e:
             await interaction.followup.send(embed=error_embed(title="Couldn't delete messages", description=f"```{e}```"))

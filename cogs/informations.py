@@ -5,16 +5,17 @@ from discord.app_commands import command, guilds
 from discord.ext import commands
 
 from constants import BOT_VERSION, COLORS, GUILD_ID
+from JuiceBot import JuiceBot
 from utils import default_embed
 
 
-async def setup(bot: commands.Bot):
+async def setup(bot: JuiceBot):
     await bot.add_cog(InformationsCog(bot))
 
 
 class InformationsCog(commands.Cog):
 
-    def __init__(self, bot: commands.Bot):
+    def __init__(self, bot: JuiceBot):
         self.bot = bot
 
 
