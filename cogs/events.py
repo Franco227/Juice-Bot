@@ -43,7 +43,7 @@ class EventsCog(commands.Cog):
 
 
     async def delete_and_remove_access(self, message: discord.Message, source: str):
-        if message.guild is None:
+        if message.guild is None or not type(message.author) is discord.Member:
             return
         message_content = f"Message: {message.content or 'None'}"
         filenames = f"Filenames: {', '.join(attachment.filename for attachment in message.attachments) if len(message.attachments) else 'None'}"
@@ -52,6 +52,7 @@ class EventsCog(commands.Cog):
         if sus_role:
             await message.author.add_roles(sus_role)
         await message.delete()
+
 
     @commands.Cog.listener()
     async def on_message(self, message: discord.Message):
@@ -116,19 +117,28 @@ class EventsCog(commands.Cog):
         embed.add_field(name="Channel", value=f"<#{message.channel.id}>")
         await self.bot.send_log(embed=embed)
 
+
     async def send_multiple_deleted_messages_log(self, messages: list[discord.Message]):
+        messages.sort(key=lambda message: message.created_at)
+        # Content
         if all(message.content == messages[0].content for message in messages[1:]):
-            content_section = f"Content: ```{messages[0].content}```"
-        elif len(messages) > 7:
-            content_section = ""
+            contents = f"Content: ```{messages[0].content}```"
+        elif sum(len(message.content) for message in messages) + 6 * len(messages) > 4000:
+            contents = ""
         else:
-            content_section = "Content: " + ''.join(f"```{message.content}```" for message in sorted(messages, key=lambda message: message.created_at))
-        embed = error_embed(title="Messages deleted", description=f"{len(messages)} messages deleted.\n{content_section}")
-        embed.add_field(name="Channels", value=', '.join(channel.mention for channel in {message.channel for message in messages}))
+            contents = "Content: " + ''.join(f"```{message.content}```" for message in messages)
+        embed = error_embed(title="Messages deleted", description=f"{len(messages)} messages deleted.\n{contents}")
+        # Channels
+        if all(message.channel.id == messages[0].channel.id for message in messages[:1]):
+            channels = f"<#{messages[0].channel.id}>"
+        else:
+            channels = ', '.join(f"<#{message.channel.id}>" for message in messages)
+        embed.add_field(name="Channels", value=channels)
+        # Users
         if all(message.author.id == messages[0].author.id for message in messages[1:]):
             embed.set_author(name=f"{messages[0].author} ({messages[0].author.id})", icon_url=messages[0].author.avatar.url if messages[0].author.avatar else None)
         else:
-            embed.add_field(name="Users", value=', '.join(author.mention for author in {message.author for message in messages}), inline=False)
+            embed.add_field(name="Users", value=', '.join(message.author.mention for message in messages), inline=False)
         await self.bot.send_log(embed=embed)
 
 
