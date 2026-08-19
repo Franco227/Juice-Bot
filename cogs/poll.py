@@ -50,7 +50,7 @@ class PollCog(commands.Cog):
             attachment: discord.Attachment | None = None
         ):
         await interaction.response.send_message("Creating embed...")
-        embed = default_embed(title=title, description=description.replace("\\n","\n"), timestamp=datetime.fromtimestamp(float(end_timestamp)))
+        embed = default_embed(title=title, description=description.replace('\\n','\n'), timestamp=datetime.fromtimestamp(float(end_timestamp)))
         embed.set_footer(text = "Poll ends at")
         note = ""
         if attachment is not None:
@@ -61,7 +61,7 @@ class PollCog(commands.Cog):
         await interaction.edit_original_response(content="Sending poll...")
         try:
             message = await channel.send(content=mention.mention if mention else "", embed=embed)
-        except Exception as e:
+        except (discord.Forbidden, discord.HTTPException) as e:
             return await interaction.edit_original_response(content="", embed=error_embed(f"The poll could not be sent !\n`{e}`"))
         await interaction.edit_original_response(content="Adding reactions...")
         if number_of_reactions == 0:
@@ -90,7 +90,9 @@ class PollCog(commands.Cog):
         try:
             message_id = message_id.split('-')[1] if '-' in message_id else message_id
             message = await channel.fetch_message(int(message_id))
-        except Exception as e:
+        except ValueError:
+            return await interaction.response.send_message(embed=error_embed("Invalid message ID."), ephemeral=True)
+        except (discord.Forbidden, discord.HTTPException) as e:
             return await interaction.response.send_message(embed=error_embed(f"Message not found.\n`{e}`"), ephemeral=True)
         if message.author != self.bot.user:
             return await interaction.response.send_message(embed=error_embed("This is not a poll."), ephemeral=True)
@@ -98,7 +100,7 @@ class PollCog(commands.Cog):
         if change == "title":
             embed.title = new_value.format(title=embed.title)
         elif change == "description":
-            embed.description = new_value.format(description=embed.description).replace("\\n","\n")
+            embed.description = new_value.format(description=embed.description).replace('\\n','\n')
         elif change == "timestamp":
             try:
                 timestamp = float(new_value)
@@ -111,6 +113,6 @@ class PollCog(commands.Cog):
             embed.set_image(url=new_value)
         try:
             await message.edit(embed=embed)
-        except Exception as e:
+        except (discord.Forbidden, discord.HTTPException) as e:
             return await interaction.response.send_message(embed=error_embed(f"An error occurred... Make sure that you input correct arguments.\n`{e}`"), ephemeral=True)
         await interaction.response.send_message(embed=success_embed(title="Poll edited successfully!", description=f"\n\nhttps://discord.com/channels/{GUILD_ID}/{channel.id}/{message.id}"))

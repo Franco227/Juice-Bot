@@ -1,7 +1,7 @@
 import discord
 from aiohttp.client_exceptions import ClientConnectorError
 from discord.app_commands import AppCommandError, errors
-from discord.ext import commands
+from discord.ext import commands, tasks
 
 from constants import (
     BOT_INTENTS,
@@ -11,7 +11,7 @@ from constants import (
     LOG_CHANNEL_ID,
     LOGGER,
 )
-from utils import error_embed
+from utils import error_embed, get_random_status
 
 
 class JuiceBot(commands.Bot):
@@ -28,12 +28,17 @@ class JuiceBot(commands.Bot):
         ]
 
     async def setup_hook(self):
+        self.status_loop.start()
         LOGGER.info("Loading cogs...")
         for extension in self.initial_extensions:
             await self.load_extension(extension)
             LOGGER.info(f"Loaded {extension}")
         await self.tree.sync(guild=discord.Object(id=GUILD_ID))
         LOGGER.info("Command tree synced.")
+
+    @tasks.loop(minutes=10)
+    async def status_loop(self):
+        await self.change_presence(activity=discord.Game(name=get_random_status()))
 
     async def send_log(self, embed: discord.Embed):
         log_channel = self.get_channel(LOG_CHANNEL_ID)

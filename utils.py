@@ -1,6 +1,7 @@
-from datetime import datetime, UTC
-from discord import Embed
+from datetime import UTC, datetime
 from random import randrange
+
+from discord import Embed
 
 from constants import COLORS
 
@@ -11,13 +12,13 @@ def dtime() -> datetime:
 def get_random_status() -> str:
     with open("data/splash_texts.txt", 'r') as file:
         texts = file.readlines()
-        return texts[randrange(len(texts))]
+        return texts[randrange(len(texts))].strip()
 
 def s(list_or_count: list | int) -> str:
     if isinstance(list_or_count, list):
-        return '' if len(list_or_count) == 1 else 's'
+        return "" if len(list_or_count) == 1 else 's'
     if isinstance(list_or_count, int):
-        return '' if list_or_count == 1 else 's'
+        return "" if list_or_count == 1 else 's'
 
 def success_embed(description: str, title: str = "Success!", timestamp: datetime | None = None, *args) -> Embed:
     return Embed(title=title, description=description, color=COLORS.green(), timestamp=(timestamp or dtime()), *args)

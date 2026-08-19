@@ -13,7 +13,7 @@ from constants import (
     SUS_ROLE_ID,
 )
 from JuiceBot import JuiceBot
-from utils import error_embed, get_random_status
+from utils import error_embed
 
 
 async def setup(bot: JuiceBot):
@@ -37,9 +37,6 @@ class EventsCog(commands.Cog):
     @commands.Cog.listener()
     async def on_ready(self):
         LOGGER.info(f"[v{BOT_VERSION}] Bot connected as {self.bot.user.name if self.bot.user else 'unknown bot'}.")
-        while 1:
-            await self.bot.change_presence(activity=discord.Game(name=get_random_status()))
-            await asleep(600)
 
 
     async def delete_and_remove_access(self, message: discord.Message, source: str):
@@ -129,7 +126,7 @@ class EventsCog(commands.Cog):
             contents = "Content: " + ''.join(f"```{message.content}```" for message in messages)
         embed = error_embed(title="Messages deleted", description=f"{len(messages)} messages deleted.\n{contents}")
         # Channels
-        if all(message.channel.id == messages[0].channel.id for message in messages[:1]):
+        if all(message.channel.id == messages[0].channel.id for message in messages[1:]):
             channels = f"<#{messages[0].channel.id}>"
         else:
             channels = ', '.join(f"<#{message.channel.id}>" for message in messages)

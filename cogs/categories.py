@@ -30,7 +30,6 @@ class CategoriesCog(commands.Cog):
         categories_json = { "categories": [category.to_json() for category in self.categories] }
         with open("data/categories.json", 'w') as file:
             json.dump(categories_json, file, indent=4)
-            file.truncate()
         LOGGER.info("Categories saved.")
 
     def get_category(self, id: int | None) -> Category | None:
@@ -53,8 +52,8 @@ class CategoriesCog(commands.Cog):
             return await interaction.response.send_message(embed=error_embed(f"The faq can't be longer than 2000 characters due to discord limitations.\nCharacters : {len(faq)}"), ephemeral=True)
         new_category = Category({ "name": name, "channel": interaction.channel_id, "faq": faq, "seeds": [] })
         self.categories.append(new_category)
-        await interaction.response.send_message(embed=success_embed(title="Category created!", description=f"The category {name} for the current channel has been created successfully!"))
         LOGGER.info(f"Category {name} added by {interaction.user}.")
+        await interaction.response.send_message(embed=success_embed(title="Category created!", description=f"The category {name} for the current channel has been created successfully!"))
         self.save_categories()
 
 
@@ -69,9 +68,12 @@ class CategoriesCog(commands.Cog):
         old_category_name = old_category.get("name", "Nameless Category")
         self.categories.remove(category)
         self.save_categories()
-        await interaction.user.send(embed=success_embed(title="Category deleted!", description=f"The category {old_category_name} for the channel <#{interaction.channel_id}> has been successfully deleted!\n\nCategory JSON:```json\n{old_category}```"))
+        LOGGER.info(f"Category {old_category_name} deleted by {interaction.user}. JSON: {old_category}")
         await interaction.response.send_message(embed=success_embed(title="Category deleted!", description=f"The category {old_category_name} for the current channel has been successfully deleted!"))
-        LOGGER.info(f"Category {old_category_name} deleted by {interaction.user}.")
+        try:
+            await interaction.user.send(embed=success_embed(title="Category deleted!", description=f"The category {old_category_name} for the channel <#{interaction.channel_id}> has been successfully deleted!\n\nCategory JSON:```json\n{old_category}```"))
+        except discord.HTTPException:
+            return
 
 
 
@@ -95,9 +97,12 @@ class CategoriesCog(commands.Cog):
         old_faq = category.faq
         category.edit_faq(text)
         self.save_categories()
-        await interaction.user.send(embed=success_embed(title="FAQ updated!", description=f"The FAQ for the channel <#{interaction.channel_id}> has been successfully updated!\n\nOld FAQ:```{old_faq}```"))
-        await interaction.response.send_message(embed=success_embed(title="FAQ updated!", description="The FAQ for the current channel has been successfully updated!"))
         LOGGER.info(f"FAQ of {category.name} edited by {interaction.user}.")
+        await interaction.response.send_message(embed=success_embed(title="FAQ updated!", description="The FAQ for the current channel has been successfully updated!"))
+        try:
+            await interaction.user.send(embed=success_embed(title="FAQ updated!", description=f"The FAQ for the channel <#{interaction.channel_id}> has been successfully updated!\n\nOld FAQ:```{old_faq}```"))
+        except discord.HTTPException:
+            return
 
 
 
@@ -129,7 +134,7 @@ class CategoriesCog(commands.Cog):
         category.add_seed(new_seed)
         category.sort_seeds()
         self.save_categories()
-        LOGGER.info(f"Seed {new_seed.get("seed", "<no assigned seed>")} added to {category.name} by {interaction.user}.")
+        LOGGER.info(f"Seed {seed} added to {category.name} by {interaction.user}.")
         await interaction.response.send_message(embed=success_embed(title="Seed added!", description=f"The seed {seed} was added successfully !"))
 
 
@@ -156,7 +161,7 @@ class CategoriesCog(commands.Cog):
         current_seed.edit_data(new_data)
         category.sort_seeds()
         self.save_categories()
-        LOGGER.info(f"Seed {seed} for {category.name} edited by {interaction.user}.")
+        LOGGER.info(f"Seed {seed} for {category.name} edited by {interaction.user}. JSON: {old_data}")
         await interaction.response.send_message(embed=success_embed(title="Seed edited!", description=f"The seed {seed} was edited successfully !\n\nOld Seed JSON:```json\n{old_data}```"))
 
 
@@ -169,8 +174,8 @@ class CategoriesCog(commands.Cog):
         if category is None:
             return await interaction.response.send_message(embed=error_embed("This channel is not linked to a category..."), ephemeral=True)
         if (old_seed := category.get_seed(seed)) is None:
-           return await interaction.response.send_message(embed=error_embed("This seed is not used for this category..."), ephemeral=True)
+            return await interaction.response.send_message(embed=error_embed("This seed is not used for this category..."), ephemeral=True)
         category.remove_seed(seed)
         self.save_categories()
-        LOGGER.info(f"Seed {seed} for {category.name} removed by {interaction.user}.")
+        LOGGER.info(f"Seed {seed} for {category.name} removed by {interaction.user}. JSON: {old_seed.to_json()}")
         await interaction.response.send_message(embed=success_embed(title="Seed deleted!", description=f"The seed {seed} was deleted succesfully !\n\nSeed JSON:```json\n{old_seed.to_json()}```"))

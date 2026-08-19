@@ -41,7 +41,7 @@ class Category():
         sortkey = []
         version = seed.version.split('-')[0].split('.')
         sortkey.extend(list(map(int, version[:2])))
-        if len(version) == 1 or version[1] == "x":
+        if len(version) == 1 or version[1] == 'x':
             sortkey.extend([0, 0])
         elif len(version) == 2 or version[2].lower() == 'x':
             sortkey.append(0)
