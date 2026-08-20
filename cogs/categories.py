@@ -40,22 +40,43 @@ class CategoriesCog(commands.Cog):
         return None
 
 
+    @command(name="refresh_categories", description="Refresh all categories")
+    @guilds(GUILD_ID)
+    @checks.has_any_role(MOD_ROLE_ID, OWNER_ROLE_ID)
+    async def refresh_categories(self, interaction: discord.Interaction):
+        self.load_categories()
+        await interaction.response.send_message("Categories refreshed!", ephemeral=True)
+
+
     @command(name="create_category", description="Create an category for the current channel")
     @guilds(GUILD_ID)
     @checks.has_any_role(MOD_ROLE_ID, OWNER_ROLE_ID)
     @describe(name="The name of the category")
     @describe(faq="The FAQ of the category")
-    async def create_category(self, interaction: discord.Interaction, name: str, faq: str = "FAQ not available yet"):
+    async def create_category(self, interaction: discord.Interaction, name: str, faq: str = "FAQ not set"):
         category = self.get_category(interaction.channel_id)
         if category is not None:
-            return await interaction.response.send_message(embed=error_embed("This channel is already linked to a category... Maybe you wanted to do /update_faq ?"), ephemeral=True)
+            return await interaction.response.send_message(embed=error_embed("This channel is already linked to a category."), ephemeral=True)
         if len(faq) > 2000:
-            return await interaction.response.send_message(embed=error_embed(f"The faq can't be longer than 2000 characters due to discord limitations.\nCharacters : {len(faq)}"), ephemeral=True)
+            return await interaction.response.send_message(embed=error_embed(f"The FAQ cannot be longer than 2000 characters due to discord limitations.\nCharacters : {len(faq)}"), ephemeral=True)
         new_category = Category({ "name": name, "channel": interaction.channel_id, "faq": faq, "seeds": [] })
         self.categories.append(new_category)
+        self.save_categories()
         LOGGER.info(f"Category {name} added by {interaction.user}.")
         await interaction.response.send_message(embed=success_embed(title="Category created!", description=f"The category {name} for the current channel has been created successfully!"))
-        self.save_categories()
+
+
+    @command(name="rename_category", description="Rename the current channel's category")
+    @guilds(GUILD_ID)
+    @checks.has_any_role(MOD_ROLE_ID, OWNER_ROLE_ID)
+    @describe(name="The new name of the category")
+    async def rename_category(self, interaction: discord.Interaction, name: str):
+        category = self.get_category(interaction.channel_id)
+        if category is None:
+            return await interaction.response.send_message(embed=error_embed("This channel is not linked to a category."), ephemeral=True)
+        old_name = category.edit_name(name)
+        LOGGER.info(f"Category {old_name} renamed to {name} by {interaction.user}.")
+        await interaction.response.send_message(embed=success_embed(title="Category renamed!", description=f"The category {old_name} has been renamed to {name}!"))
 
 
     @command(name="delete_category", description="Delete the current channel's category")
@@ -64,7 +85,7 @@ class CategoriesCog(commands.Cog):
     async def delete_category(self, interaction: discord.Interaction):
         category = self.get_category(interaction.channel_id)
         if category is None:
-            return await interaction.response.send_message(embed=error_embed("This channel doesn't have an FAQ..."), ephemeral=True)
+            return await interaction.response.send_message(embed=error_embed("This channel is not linked to a category."), ephemeral=True)
         old_category = category.to_json()
         old_category_name = old_category.get("name", "Nameless Category")
         self.categories.remove(category)
@@ -83,7 +104,7 @@ class CategoriesCog(commands.Cog):
     async def faq(self, interaction: discord.Interaction):
         category = self.get_category(interaction.channel_id)
         if category is None:
-            return await interaction.response.send_message(embed=error_embed("This channel isn't linked to a category..."))
+            return await interaction.response.send_message(embed=error_embed("This channel is not linked to a category."))
         await interaction.response.send_message(embed=success_embed(title=category.name, description=category.faq))
 
 
@@ -94,9 +115,8 @@ class CategoriesCog(commands.Cog):
     async def edit_faq(self, interaction: discord.Interaction, text: str):
         category = self.get_category(interaction.channel_id)
         if category is None:
-            return await interaction.response.send_message(embed=error_embed("This channel isn't linked to a category... Maybe you wanted to do /new_category ?"), ephemeral=True)
-        old_faq = category.faq
-        category.edit_faq(text)
+            return await interaction.response.send_message(embed=error_embed("This channel is not linked to a category. Create a new category with `/create_category`."), ephemeral=True)
+        old_faq = category.edit_faq(text)
         self.save_categories()
         LOGGER.info(f"FAQ of {category.name} edited by {interaction.user}.")
         await interaction.response.send_message(embed=success_embed(title="FAQ updated!", description="The FAQ for the current channel has been successfully updated!"))
@@ -112,7 +132,7 @@ class CategoriesCog(commands.Cog):
     async def seeds(self, interaction: discord.Interaction):
         category = self.get_category(interaction.channel_id)
         if category is None:
-            return await interaction.response.send_message(embed=error_embed("This channel isn't linked to a category..."))
+            return await interaction.response.send_message(embed=error_embed("This channel is not linked to a category."))
         embed = success_embed(title=category.name, description=f"{len(category.seeds)} seed{s(category.seeds)} found.")
         for seed in category.seeds:
             embed.add_field(name=f"{seed.name} ({seed.version})", value=f"`{seed.seed}`", inline=False)
@@ -128,9 +148,9 @@ class CategoriesCog(commands.Cog):
     async def add_seed(self, interaction: discord.Interaction, seed_name: str, seed: str, seed_version: str):
         category = self.get_category(interaction.channel_id)
         if category is None:
-            return await interaction.response.send_message(embed=error_embed("This channel is not linked to a category..."), ephemeral=True)
+            return await interaction.response.send_message(embed=error_embed("This channel is not linked to a category."), ephemeral=True)
         if category.get_seed(seed) is not None:
-            return await interaction.response.send_message(embed=error_embed("This seed already exist for this category... Maybe you wanted to do /edit_seed ?"), ephemeral=True)
+            return await interaction.response.send_message(embed=error_embed("This seed already exists for this category."), ephemeral=True)
         new_seed = { "name": seed_name, "seed": seed, "version": seed_version }
         category.add_seed(new_seed)
         category.sort_seeds()
@@ -153,13 +173,12 @@ class CategoriesCog(commands.Cog):
     async def edit_seed(self, interaction: discord.Interaction, seed: str, change: str, new_value: str):
         category = self.get_category(interaction.channel_id)
         if category is None:
-            return await interaction.response.send_message(embed=error_embed("This channel is not linked to a category..."), ephemeral=True)
+            return await interaction.response.send_message(embed=error_embed("This channel is not linked to a category."), ephemeral=True)
         if (current_seed := category.get_seed(seed)) is None:
-            return await interaction.response.send_message(embed=error_embed("This seed is not used for this category..."), ephemeral=True)
-        old_data = current_seed.to_json()
+            return await interaction.response.send_message(embed=error_embed("This seed is not used for this category."), ephemeral=True)
         new_data = current_seed.to_json()
         new_data[change] = new_value
-        current_seed.edit_data(new_data)
+        old_data = current_seed.edit_data(new_data)
         category.sort_seeds()
         self.save_categories()
         LOGGER.info(f"Seed {seed} for {category.name} edited by {interaction.user}. JSON: {old_data}")
@@ -173,9 +192,9 @@ class CategoriesCog(commands.Cog):
     async def remove_seed(self, interaction: discord.Interaction, seed: str):
         category = self.get_category(interaction.channel_id)
         if category is None:
-            return await interaction.response.send_message(embed=error_embed("This channel is not linked to a category..."), ephemeral=True)
+            return await interaction.response.send_message(embed=error_embed("This channel is not linked to a category."), ephemeral=True)
         if (old_seed := category.get_seed(seed)) is None:
-            return await interaction.response.send_message(embed=error_embed("This seed is not used for this category..."), ephemeral=True)
+            return await interaction.response.send_message(embed=error_embed("This seed is not used for this category."), ephemeral=True)
         category.remove_seed(seed)
         self.save_categories()
         LOGGER.info(f"Seed {seed} for {category.name} removed by {interaction.user}. JSON: {old_seed.to_json()}")

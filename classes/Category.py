@@ -6,18 +6,22 @@ class Category():
     def __init__(self, data: dict):
         self.name: str = data.get("name", "Nameless Category")
         self.id: int = data.get("channel", 0)
-        self.faq: str = data.get("faq", "FAQ not available yet").replace("\\n", "\n")
+        self.faq: str = data.get("faq", "FAQ not set").replace("\\n", "\n")
         self.seeds = [Seed(seed) for seed in data.get("seeds", [])]
 
     def __str__(self) -> str:
         return f"<Category  id={self.id}  name={self.name}  seeds_nb={len(self.seeds)}>"
 
 
-    def edit_name(self, name: str):
+    def edit_name(self, name: str) -> str:
+        old_name = self.name
         self.name = name
+        return old_name
 
-    def edit_faq(self, faq: str):
+    def edit_faq(self, faq: str) -> str:
+        old_faq = self.faq
         self.faq = faq
+        return old_faq
 
     def get_seed(self, seed: str) -> Seed | None:
         for seed_object in self.seeds:

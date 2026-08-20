@@ -9,10 +9,12 @@ class Seed():
         return f"<Seed  name={self.name}  seed={self.seed}  version={self.version}>"
 
 
-    def edit_data(self, new_data: dict):
+    def edit_data(self, new_data: dict) -> dict:
+        old_data = self.to_json()
         self.name = new_data.get("name", "Nameless Seed")
         self.seed = new_data.get("seed", "<no assigned seed>")
         self.version = new_data.get("version", "0.0.0")
+        return old_data
 
     def to_json(self) -> dict:
         return {
