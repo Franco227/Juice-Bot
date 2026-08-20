@@ -87,7 +87,7 @@
         {
             "name": "All Buckets",
             "channel": 936385782145490944,
-            "faq": "FAQ not available yet",
+            "faq": "FAQ not set",
             "seeds": [
                 {
                     "name": "Pre 1.13",
@@ -114,19 +114,19 @@
         {
             "name": "All Deaths",
             "channel": 936386963521536041,
-            "faq": "FAQ not available yet",
+            "faq": "FAQ not set",
             "seeds": []
         },
         {
             "name": "Half Death",
             "channel": 936959169209184276,
-            "faq": "FAQ not available yet",
+            "faq": "FAQ not set",
             "seeds": []
         },
         {
             "name": "Saddle Master",
             "channel": 936460254210846751,
-            "faq": "FAQ not available yet",
+            "faq": "FAQ not set",
             "seeds": [
                 {
                     "name": "Abandoned Village",
@@ -220,13 +220,13 @@
         {
             "name": "Bullseye%",
             "channel": 1016976593031274576,
-            "faq": "FAQ not available yet",
+            "faq": "FAQ not set",
             "seeds": []
         },
         {
             "name": "Aether",
             "channel": 1038841498357215443,
-            "faq": "FAQ not available yet",
+            "faq": "FAQ not set",
             "seeds": [
                 {
                     "name": "Trading Seed",
