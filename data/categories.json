@@ -157,7 +157,18 @@
             "name": "Postmortal",
             "channel": 988343447469563904,
             "faq": "**Q:** What is this category ?\n**A:** You need to obtain the \"Postmortal\" advancement, which is obtained by taking fatal damage while holding a Totem of Undying.\n\n**Q:** How do I obtain a totem ?\n**A:** You get a totem by killing an Evoker. Evokers spawns in Mansion, and at certain waves of a village raid.\n\n**Q:** What is the SSG seed ?\n**A:** `4463711588556628022` on version 1.16.1",
-            "seeds": []
+            "seeds": [
+                {
+                    "name": "seed",
+                    "seed": 5674977948864262443,
+                    "version": "1.16.1"
+                },
+                {
+                    "name": "World Load",
+                    "seed": -159033144457489938,
+                    "version": "1.21.4 - 1.21.11"
+                }
+            ]
         },
         {
             "name": "Superflat Any%",
