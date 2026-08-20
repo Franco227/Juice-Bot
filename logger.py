@@ -1,6 +1,7 @@
 from datetime import UTC, datetime
 from logging import INFO, FileHandler, Formatter, LogRecord, StreamHandler, getLogger
 from sys import stdout
+from time import gmtime
 
 from discord.utils import _ColourFormatter
 
@@ -21,12 +22,15 @@ class DailyFileHandler(FileHandler):
         super().emit(record)
 
 
-_logger_stream_handler = StreamHandler(stdout)
-_logger_stream_handler.setFormatter(_ColourFormatter())
-_logger_file_handler = DailyFileHandler(directory="logs")
-_logger_file_handler.setFormatter(Formatter("%(asctime)s %(levelname)-8s %(message)s", datefmt="%Y-%m-%d %H:%M:%S"))
+_stream_handler = StreamHandler(stdout)
+_stream_handler.setFormatter(_ColourFormatter())
+
+_file_handler_formatter = Formatter("%(asctime)s %(levelname)-8s %(message)s", datefmt="%Y-%m-%d %H:%M:%S")
+_file_handler_formatter.converter = gmtime
+_file_handler = DailyFileHandler(directory="logs")
+_file_handler.setFormatter(_file_handler_formatter)
 
 LOGGER = getLogger("JuiceBot")
-LOGGER.addHandler(_logger_stream_handler)
-LOGGER.addHandler(_logger_file_handler)
+LOGGER.addHandler(_stream_handler)
+LOGGER.addHandler(_file_handler)
 LOGGER.setLevel(INFO)
