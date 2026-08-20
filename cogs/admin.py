@@ -2,8 +2,9 @@ import discord
 from discord.app_commands import checks, command, describe, guilds
 from discord.ext import commands
 
-from constants import GUILD_ID, LOGGER, OWNER_ROLE_ID
+from constants import GUILD_ID, OWNER_ROLE_ID
 from JuiceBot import JuiceBot
+from logger import LOGGER
 from utils import default_embed, error_embed, get_random_status, success_embed
 
 

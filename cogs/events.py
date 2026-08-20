@@ -9,10 +9,10 @@ from constants import (
     GUILD_ID,
     HONEYPOT_CHANNEL_ID,
     LOG_CHANNEL_ID,
-    LOGGER,
     SUS_ROLE_ID,
 )
 from JuiceBot import JuiceBot
+from logger import LOGGER
 from utils import error_embed
 
 

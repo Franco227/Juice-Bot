@@ -9,8 +9,8 @@ from constants import (
     BOT_TOKEN,
     GUILD_ID,
     LOG_CHANNEL_ID,
-    LOGGER,
 )
+from logger import LOGGER
 from utils import error_embed, get_random_status
 
 

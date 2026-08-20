@@ -5,8 +5,9 @@ from discord.app_commands import Choice, checks, choices, command, describe, gui
 from discord.ext import commands
 
 from classes.Category import Category
-from constants import GUILD_ID, LOGGER, MOD_ROLE_ID, OWNER_ROLE_ID
+from constants import GUILD_ID, MOD_ROLE_ID, OWNER_ROLE_ID
 from JuiceBot import JuiceBot
+from logger import LOGGER
 from utils import error_embed, s, success_embed
 
 
