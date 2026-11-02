@@ -109,7 +109,7 @@ class EventsCog(commands.Cog):
 
 
     async def send_deleted_message_log(self, message: discord.Message):
-        embed = error_embed(title="Message deleted", description=message.content)
+        embed = error_embed(title="Message deleted", description=message.content or "No content.")
         embed.set_author(name=f"{message.author} ({message.author.id})", icon_url=message.author.avatar.url if message.author.avatar else None)
         if len(message.attachments) != 0:
             embed.add_field(name="Attachments", value=', '.join(attachment.filename for attachment in message.attachments), inline=False)
@@ -119,23 +119,37 @@ class EventsCog(commands.Cog):
 
     async def send_multiple_deleted_messages_log(self, messages: list[discord.Message]):
         messages.sort(key=lambda message: message.created_at)
+        first = messages[0]
+        rest = messages[1:]
+
         # Content
-        if all(message.content == messages[0].content for message in messages[1:]):
-            contents = f"Content: ```{messages[0].content}```"
+        if all(message.content == "" for message in messages):
+            contents = "No content."
+        elif all(message.content == first.content for message in rest):
+            contents = f"Content: ```{first.content}```"
         elif sum(len(message.content) for message in messages) + 6 * len(messages) > 4000:
-            contents = ""
+            contents = "Content too large to display."
         else:
             contents = "Content: " + ''.join(f"```{message.content}```" for message in messages)
         embed = error_embed(title="Messages deleted", description=f"{len(messages)} messages deleted.\n{contents}")
+
+        # Attachments
+        def has_same_filenames(message: discord.Message):
+            return len(message.attachments) == len(first.attachments) and all(attachment.filename == first.attachments[i].filename for i, attachment in enumerate(message.attachments))
+
+        if all(has_same_filenames(message) for message in messages):
+            embed.add_field(name="Attachments", value=', '.join(attachment.filename for attachment in first.attachments), inline=False)
+
         # Channels
-        if all(message.channel.id == messages[0].channel.id for message in messages[1:]):
-            channels = f"<#{messages[0].channel.id}>"
+        if all(message.channel.id == first.channel.id for message in rest):
+            channels = f"<#{first.channel.id}>"
         else:
             channels = ', '.join(f"<#{message.channel.id}>" for message in messages)
         embed.add_field(name="Channels", value=channels)
+
         # Users
-        if all(message.author.id == messages[0].author.id for message in messages[1:]):
-            embed.set_author(name=f"{messages[0].author} ({messages[0].author.id})", icon_url=messages[0].author.avatar.url if messages[0].author.avatar else None)
+        if all(message.author.id == first.author.id for message in rest):
+            embed.set_author(name=f"{first.author} ({first.author.id})", icon_url=first.author.avatar.url if first.author.avatar else None)
         else:
             embed.add_field(name="Users", value=', '.join(message.author.mention for message in messages), inline=False)
         await self.bot.send_log(embed=embed)
