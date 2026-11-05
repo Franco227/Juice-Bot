@@ -2,7 +2,7 @@ from re import search
 
 import discord
 from aiohttp import ClientResponse, ClientSession
-from discord.app_commands import checks, command, guilds
+from discord.app_commands import Choice, checks, choices, command, describe, guilds
 from discord.ext import commands
 
 from constants import COLORS, GUILD_ID, MOD_ROLE_ID, OWNER_ROLE_ID
@@ -74,7 +74,13 @@ class SRCCog(commands.Cog):
     @command(name="check_runs", description="Check pending runs for invalid seeds")
     @guilds(GUILD_ID)
     @checks.has_any_role(MOD_ROLE_ID, OWNER_ROLE_ID)
-    async def check_runs(self, interaction: discord.Interaction):
+    @describe(status="The status of the runs you want to check")
+    @choices(status=[
+        Choice(name="new", value="new"),
+        Choice(name="verified", value="verified"),
+        Choice(name="rejected", value="rejected")
+    ])
+    async def check_runs(self, interaction: discord.Interaction, status: str = "new"):
         await interaction.response.send_message("Refreshing variables...")
         async with ClientSession() as session:
             rsg_variables = await self.get_rsg_variables(session)
@@ -84,10 +90,10 @@ class SRCCog(commands.Cog):
             await interaction.edit_original_response(content="Retrieving runs...")
             query_params = '&'.join([
                 f"game={self.game_id}",
-                "status=new", # TODO: add command parameter for status param
+                f"status={status}",
                 "orderby=submitted",
                 "direction=asc",
-                "max=200"
+                "max=200" # TODO: follow pagination to scan all runs
             ])
             async with session.get(f"{self.api}/runs?{query_params}") as response:
                 if response.status != 200:
