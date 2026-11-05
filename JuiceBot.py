@@ -20,7 +20,7 @@ class JuiceBot(commands.Bot):
         self.initial_extensions = [
             "cogs.admin",
             "cogs.categories",
-            "cogs.check_runs",
+            "cogs.src",
             "cogs.events",
             "cogs.informations",
             "cogs.odds",
